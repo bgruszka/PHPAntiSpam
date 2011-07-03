@@ -1,0 +1,1 @@
+PHPAntiSpam is a library, which recognize if some part of documents / texts are spam or not. The library use bayes statistical analysis.
