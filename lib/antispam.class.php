@@ -52,6 +52,8 @@ class Antispam
 	 * Calculate bayes probability
 	 * 
 	 * @param array $lexemes
+	 * 
+	 * @return float
 	 */
 	public function bayes(array $lexemes)
 	{
@@ -67,25 +69,17 @@ class Antispam
 		return $result;
 	}
 	
-	public function isSpam($text)
-	{	
-		foreach($this->corpus->lexemes as $word => $value) {
-			$graham = $this->graham(
-				$value['spam'], 
-				$value['nospam'], 
-				$this->corpus->messagesCount['spam'], 
-				$this->corpus->messagesCount['nospam']
-			);
-			
-			$probability = $this->robinson($value['spam'] + $value['nospam'], $graham);
-			$this->corpus->lexemes[$word]['probability'] = $probability;
-		}
-		
-		// create decision matrix
+	/**
+	 * Create decision matrix
+	 * 
+	 * @param array $words
+	 * 
+	 * @return array
+	 */
+	public function createDecisionMatrix(array $words)
+	{
 		$usefulnessArray = array();
 		$decisionMatrix = array();
-		
-		$words = explode(' ', $text);
 		
 		foreach($words as $word) {
 			$word = trim($word);
@@ -107,6 +101,27 @@ class Antispam
 		
 		// sort by usefulness
 		array_multisort($usefulnessArray, SORT_DESC, $decisionMatrix);
+		
+		return $decisionMatrix;
+	}
+	
+	public function isSpam($text)
+	{	
+		foreach($this->corpus->lexemes as $word => $value) {
+			$graham = $this->graham(
+				$value['spam'], 
+				$value['nospam'], 
+				$this->corpus->messagesCount['spam'], 
+				$this->corpus->messagesCount['nospam']
+			);
+			
+			$probability = $this->robinson($value['spam'] + $value['nospam'], $graham);
+			$this->corpus->lexemes[$word]['probability'] = $probability;
+		}
+		
+		$words = explode(' ', $text);
+		
+		$decisionMatrix = $this->createDecisionMatrix($words);
 		
 		// need only first 15
 		$mostImportantLexemes = array_slice($decisionMatrix, 0, 15);
