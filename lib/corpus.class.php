@@ -11,6 +11,7 @@ class Corpus
 	{
 		$this->messages = $messages;
 		
+		// next
 		foreach($this->messages as $message) {
 			$this->messagesCount[$message['category']]++;
 			

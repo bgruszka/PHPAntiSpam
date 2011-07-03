@@ -2,13 +2,19 @@
 
 class Antispam 
 {
+	protected $corpus;
+	
+	public function __construct(Corpus $corpus) {
+		$this->corpus = $corpus;
+	}
+	
 	public static function graham($sh, $ih, $ts, $ti) 
 	{
 		$p = ($sh/$ts)/(($sh/$ts) + ((2*$ih)/$ti));
 		return $p;
 	}
 	
-	public static function robinson($n, $graham) 
+	public function robinson($n, $graham) 
 	{
 		$s = 1;
 		$x = 0.5;
@@ -17,17 +23,32 @@ class Antispam
 		return $fw;
 	}
 	
-	public static function isSpam($text, Corpus $corpus)
-	{
+	public function isSpam($text)
+	{	
+		// next
+		$przydatnosciArray = array();
+		foreach($this->corpus->corpusList as $word => $value) {
+			$graham = $this->graham(
+				$value['spam'], 
+				$value['nospam'], 
+				$this->corpus->messagesCount['spam'], 
+				$this->corpus->messagesCount['nospam']
+			);
+			
+			$probability = $this->robinson($value['spam'] + $value['nospam'], $graham);
+			$this->corpus->corpusList[$word]['probability'] = $probability;
+		}
+		
+		// next
 		$words = explode(' ', $text);
 		
 		foreach($words as $word) {
 			$word = trim($word);
 			if(strlen($word) > 0) {
-				if(!isset($corpus->corpusList[$word])) {
+				if(!isset($this->corpus->corpusList[$word])) {
 					$probability = 0.5;
 				} else {
-					$probability = $corpus->corpusList[$word]['probability'];
+					$probability = $this->corpus->corpusList[$word]['probability'];
 				}
 				
 				$przydatnosc = abs(0.5 - $probability);
@@ -36,6 +57,8 @@ class Antispam
 				$przydatnosciArray[] = $przydatnosc;
 			}
 		}
+		
+		// next
 		
 		array_multisort($przydatnosciArray, SORT_DESC, $needed);
 		

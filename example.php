@@ -28,26 +28,15 @@ foreach($dirs as $dir) {
 }
 
 $corpus = new Corpus($messages);
+$antispam = new Antispam($corpus);
 
-$przydatnosciArray = array();
-foreach($corpus->corpusList as $word => $value) {
-	$graham = Antispam::graham(
-		$value['spam'], 
-		$value['nospam'], 
-		$corpus->messagesCount['spam'], 
-		$corpus->messagesCount['nospam']
-	);
-	
-	$probability = Antispam::robinson($value['spam'] + $value['nospam'], $graham);
-	$corpus->corpusList[$word]['probability'] = $probability;
-}
+$message = 'This promotion is sponsored exclusively by Vindale Research';
 
-//$wiadomosc = 'to jest spam';
-$wiadomosc = 'This promotion is sponsored exclusively by Vindale Research';
+$spamProbability = $antispam->isSpam($message);
 
-var_dump(Antispam::isSpam($wiadomosc, $corpus));
+var_dump($spamProbability);
 
-if(Antispam::isSpam($wiadomosc, $corpus) < 0.9) {
+if($spamProbability < 0.9) {
 	echo PHP_EOL . 'to nie jest spam' . PHP_EOL;
 } else {
 	echo PHP_EOL . 'to jest spam' . PHP_EOL;
