@@ -48,9 +48,27 @@ class Antispam
 		return $value;
 	}
 	
+	/**
+	 * Calculate bayes probability
+	 * 
+	 * @param array $lexemes
+	 */
+	public function bayes(array $lexemes)
+	{
+		$numerator = 1;
+		$denominator = 1;
+		foreach($lexemes as $lexeme) {
+			$numerator *= $lexeme['probability'];
+			$denominator *= 1 - $lexeme['probability'];
+		}
+		
+		$result = $numerator / ($numerator + $denominator);
+		
+		return $result;
+	}
+	
 	public function isSpam($text)
 	{	
-		// next
 		foreach($this->corpus->lexemes as $word => $value) {
 			$graham = $this->graham(
 				$value['spam'], 
@@ -63,7 +81,7 @@ class Antispam
 			$this->corpus->lexemes[$word]['probability'] = $probability;
 		}
 		
-		// next
+		// create decision matrix
 		$usefulnessArray = array();
 		$decisionMatrix = array();
 		
@@ -87,20 +105,13 @@ class Antispam
 			}
 		}
 		
-		// next
-		
+		// sort by usefulness
 		array_multisort($usefulnessArray, SORT_DESC, $decisionMatrix);
 		
+		// need only first 15
 		$mostImportantLexemes = array_slice($decisionMatrix, 0, 15);
 		
-		$numerator = 1;
-		$denominator = 1;
-		foreach($mostImportantLexemes as $lexeme) {
-			$numerator *= $lexeme['probability'];
-			$denominator *= 1 - $lexeme['probability'];
-		}
-		
-		$result = $numerator / ($numerator + $denominator);
+		$result = $this->bayes($mostImportantLexemes);
 		
 		return $result;
 	}
