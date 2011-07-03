@@ -3,13 +3,14 @@
 class Antispam 
 {
 	protected $corpus;
+	private $neutral = 0.5;
 	
 	public function __construct(Corpus $corpus) {
 		$this->corpus = $corpus;
 	}
 	
 	/**
-	 * Calculate lexem value with Paul Graham method. 
+	 * Calculate lexeme value with Paul Graham method. 
 	 * To prevent over-interpreting the messages as spam, 
 	 * the number of instances of innocent lexemes is 
 	 * multiplied by 2.
@@ -30,7 +31,7 @@ class Antispam
 	}
 	
 	/**
-	 * Calculate lexem value with Gary Robinson method
+	 * Calculate lexeme value with Gary Robinson method
 	 * 
 	 * @param int $wordOccurrences Number of occurrences in corpus (in spam and nospam)
 	 * @param float $graham Word value calculated by Graham method
@@ -50,8 +51,7 @@ class Antispam
 	public function isSpam($text)
 	{	
 		// next
-		$przydatnosciArray = array();
-		foreach($this->corpus->lexems as $word => $value) {
+		foreach($this->corpus->lexemes as $word => $value) {
 			$graham = $this->graham(
 				$value['spam'], 
 				$value['nospam'], 
@@ -60,39 +60,44 @@ class Antispam
 			);
 			
 			$probability = $this->robinson($value['spam'] + $value['nospam'], $graham);
-			$this->corpus->lexems[$word]['probability'] = $probability;
+			$this->corpus->lexemes[$word]['probability'] = $probability;
 		}
 		
 		// next
+		$usefulnessArray = array();
+		$decisionMatrix = array();
+		
 		$words = explode(' ', $text);
 		
 		foreach($words as $word) {
 			$word = trim($word);
 			if(strlen($word) > 0) {
-				if(!isset($this->corpus->lexems[$word])) {
-					$probability = 0.5;
+				// first occurence of lexeme (unit lexeme)
+				if(!isset($this->corpus->lexemes[$word])) {
+					// set default / neutral lexeme probability
+					$probability = $this->neutral;
 				} else {
-					$probability = $this->corpus->lexems[$word]['probability'];
+					$probability = $this->corpus->lexemes[$word]['probability'];
 				}
 				
-				$przydatnosc = abs(0.5 - $probability);
-				$needed[$word]['probability'] = $probability;
-				$needed[$word]['przydatnosc'] = $przydatnosc;
-				$przydatnosciArray[] = $przydatnosc;
+				$usefulness = abs($this->neutral - $probability); // distance from neutral value
+				$decisionMatrix[$word]['probability'] = $probability;
+				$decisionMatrix[$word]['usefulness'] = $usefulness;
+				$usefulnessArray[] = $usefulness;
 			}
 		}
 		
 		// next
 		
-		array_multisort($przydatnosciArray, SORT_DESC, $needed);
+		array_multisort($usefulnessArray, SORT_DESC, $decisionMatrix);
 		
-		$needed = array_slice($needed, 0, 15);
+		$mostImportantLexemes = array_slice($decisionMatrix, 0, 15);
 		
 		$numerator = 1;
 		$denominator = 1;
-		foreach($needed as $word) {
-			$numerator *= $word['probability'];
-			$denominator *= 1 - $word['probability'];
+		foreach($mostImportantLexemes as $lexeme) {
+			$numerator *= $lexeme['probability'];
+			$denominator *= 1 - $lexeme['probability'];
 		}
 		
 		$result = $numerator / ($numerator + $denominator);

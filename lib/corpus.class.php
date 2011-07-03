@@ -4,7 +4,7 @@ class Corpus
 {
 	
 	protected $messages = array();
-	public $lexems = array();
+	public $lexemes = array();
 	public $messagesCount = array('spam' => 0, 'nospam' => 0);
 	
 	public function __construct($messages)
@@ -31,13 +31,13 @@ class Corpus
 				$word = strtolower(trim($word));
 				if(strlen($word) > 4) {
 					if(!empty($word)) {
-						if(in_array($word, array_keys($this->lexems))) {
-								$this->lexems[$word][$message['category']]++;
+						if(in_array($word, array_keys($this->lexemes))) {
+								$this->lexemes[$word][$message['category']]++;
 						} else {
 							if($message['category'] == 'spam') {
-								$this->lexems[$word] = array('spam' => 1, 'nospam' => 0);
+								$this->lexemes[$word] = array('spam' => 1, 'nospam' => 0);
 							} else {
-								$this->lexems[$word] = array('spam' => 0, 'nospam' => 1);
+								$this->lexemes[$word] = array('spam' => 0, 'nospam' => 1);
 							}
 						}
 					}
