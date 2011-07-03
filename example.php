@@ -1,17 +1,6 @@
-<?php
+<?php 
 
-function graham($sh, $ih, $ts, $ti) {
-	$p = ($sh/$ts)/(($sh/$ts) + ((2*$ih)/$ti));
-	return $p;
-}
-
-function robinson($n, $graham) {
-	$s = 1;
-	$x = 0.5;
-	$fw = ($s*$x + $n*$graham) / ($s + $n);
-
-	return $fw;
-}
+require_once '';
 
 $dirs = array('spam', 'nospam');
 
