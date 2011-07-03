@@ -15,11 +15,6 @@ function getMessages() {
 	    	$message = array();
 	    	
 			$content = file_get_contents($file);
-	        $content = str_replace(
-	            array('.', ',', ';', '"', ':', '?', '!', '+', '-', '/', '*', '=', '<', '>', '|', '&', '~', '`', '@'),
-	            ' ',
-	            $content
-	        );
 	
 	        $message['content'] = $content;
 	        $message['category'] = $dir;
