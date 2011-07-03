@@ -10,6 +10,7 @@ class Antispam
 	
 	/**
 	 * Calculate lexem value with Paul Graham method
+	 * @link http://www.paulgraham.com/spam.html
 	 * 
 	 * @param int $wordSpamCount
 	 * @param int $wordNoSpamCount
