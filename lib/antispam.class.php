@@ -8,19 +8,39 @@ class Antispam
 		$this->corpus = $corpus;
 	}
 	
-	public static function graham($sh, $ih, $ts, $ti) 
+	/**
+	 * Calculate lexem value with Paul Graham method
+	 * 
+	 * @param int $wordSpamCount
+	 * @param int $wordNoSpamCount
+	 * @param int $spamMessagesCount
+	 * @param int $noSpamMessagesCount
+	 * 
+	 * @return float
+	 */
+	public static function graham($wordSpamCount, $wordNoSpamCount, $spamMessagesCount, $noSpamMessagesCount) 
 	{
-		$p = ($sh/$ts)/(($sh/$ts) + ((2*$ih)/$ti));
-		return $p;
+		$value = ($wordSpamCount / $spamMessagesCount) / (($wordSpamCount/$spamMessagesCount) + ((2 * $wordNoSpamCount) / $noSpamMessagesCount));
+		
+		return $value;
 	}
 	
-	public function robinson($n, $graham) 
+	/**
+	 * Calculate lexem value with Gary Robinson method
+	 * 
+	 * @param int $wordOccurrences Number of occurrences in corpus (in spam and nospam)
+	 * @param float $graham Word value calculated by Graham method
+	 * 
+	 * @return float
+	 */
+	public function robinson($wordOccurrences, $wordGrahamValue) 
 	{
 		$s = 1;
 		$x = 0.5;
-		$fw = ($s*$x + $n*$graham) / ($s + $n);
-	
-		return $fw;
+		
+		$value = ($s * $x + $wordOccurrences * $wordGrahamValue) / ($s + $wordOccurrences);
+		
+		return $value;
 	}
 	
 	public function isSpam($text)
