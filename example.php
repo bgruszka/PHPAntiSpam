@@ -37,9 +37,9 @@ $spamProbability = $antispam->isSpam($message);
 var_dump($spamProbability);
 
 if($spamProbability < 0.9) {
-	echo PHP_EOL . 'spam' . PHP_EOL;
-} else {
 	echo PHP_EOL . 'no spam' . PHP_EOL;
+} else {
+	echo PHP_EOL . 'spam' . PHP_EOL;
 }
 
 ?>

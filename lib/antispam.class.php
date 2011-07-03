@@ -85,14 +85,14 @@ class Antispam
 		
 		$needed = array_slice($needed, 0, 15);
 		
-		$licznik = 1;
-		$mianownik = 1;
+		$numerator = 1;
+		$denominator = 1;
 		foreach($needed as $word) {
-			$licznik *= $word['probability'];
-			$mianownik *= 1 - $word['probability'];
+			$numerator *= $word['probability'];
+			$denominator *= 1 - $word['probability'];
 		}
 		
-		$result = $licznik / ($licznik + $mianownik);
+		$result = $numerator / ($numerator + $denominator);
 		
 		return $result;
 	}
