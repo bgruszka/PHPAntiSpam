@@ -1,0 +1,32 @@
+Hi. This is the qmail-send program at zeus.pc.nu.
+I'm afraid I wasn't able to deliver your message to the following addresses.
+This is a permanent error; I've given up. Sorry it didn't work out.
+
+<sniipes@pc.nu>:
+user is over quota
+
+
+--- Below this line is a copy of the message.
+
+Return-Path: <sniipe@gmail.com>
+Received: (qmail 20827 invoked by uid 89); 10 Sep 2010 20:56:24 -0000
+Received: from unknown (HELO gt-942a8f3fb9e6) (190.209.110.75)
+ by 0 with SMTP; 10 Sep 2010 20:56:24 -0000
+ Received-SPF: neutral (0: 190.209.110.75 is neither permitted nor denied by SPF record at _spf.google.com)
+ Received: by mta1-smtp.yxphhe.com (Postfix, from userid 77559)
+ 	id IGFO414367C148; Fri, 10 Sep 2010 11:42:54 -0400
+	Received: from mailcvbfx 
+		by localhost.localdomain with local (Postfix);
+			Fri, 10 Sep 2010 11:42:54 -0400
+			Date: Fri, 10 Sep 2010 11:42:54 -0400
+			To: <sniipes@pc.nu>
+			From: <sniipe@gmail.com>
+			Reply-to: sniipe@gmail.com
+			Subject: [The best Canada-Pharma good store]
+			Message-ID: <201009101542600egdrg@localhost.localdomain>
+			MIME-Version: 1.0
+			Content-Type: text/plain; charset="ISO-8859-1"
+			Content-Transfer-Encoding: 8bit
+
+			<!-- http://clipmedic.com  -->
+
