@@ -48,7 +48,7 @@ class Antispam
 	{	
 		// next
 		$przydatnosciArray = array();
-		foreach($this->corpus->corpusList as $word => $value) {
+		foreach($this->corpus->lexems as $word => $value) {
 			$graham = $this->graham(
 				$value['spam'], 
 				$value['nospam'], 
@@ -57,7 +57,7 @@ class Antispam
 			);
 			
 			$probability = $this->robinson($value['spam'] + $value['nospam'], $graham);
-			$this->corpus->corpusList[$word]['probability'] = $probability;
+			$this->corpus->lexems[$word]['probability'] = $probability;
 		}
 		
 		// next
@@ -66,10 +66,10 @@ class Antispam
 		foreach($words as $word) {
 			$word = trim($word);
 			if(strlen($word) > 0) {
-				if(!isset($this->corpus->corpusList[$word])) {
+				if(!isset($this->corpus->lexems[$word])) {
 					$probability = 0.5;
 				} else {
-					$probability = $this->corpus->corpusList[$word]['probability'];
+					$probability = $this->corpus->lexems[$word]['probability'];
 				}
 				
 				$przydatnosc = abs(0.5 - $probability);
