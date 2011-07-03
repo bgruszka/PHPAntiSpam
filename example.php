@@ -1,6 +1,6 @@
 <?php 
 
-require_once '';
+require_once 'lib/antispam.class.php';
 
 $dirs = array('spam', 'nospam');
 
@@ -50,8 +50,8 @@ foreach($dirs as $dir) {
 
 $przydatnosciArray = array();
 foreach($corpus as $word => $value) {
-	$graham = graham($value['spam'], $value['nospam'], $spamMessagesCount, $nospamMessagesCount);
-	$probability = robinson($value['spam']+$value['nospam'], $graham);
+	$graham = Antispam::graham($value['spam'], $value['nospam'], $spamMessagesCount, $nospamMessagesCount);
+	$probability = Antispam::robinson($value['spam']+$value['nospam'], $graham);
 	$corpus[$word]['probability'] = $probability;
 }
 
