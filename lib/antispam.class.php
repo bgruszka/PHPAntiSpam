@@ -9,7 +9,10 @@ class Antispam
 	}
 	
 	/**
-	 * Calculate lexem value with Paul Graham method
+	 * Calculate lexem value with Paul Graham method. 
+	 * To prevent over-interpreting the messages as spam, 
+	 * the number of instances of innocent lexemes is 
+	 * multiplied by 2.
 	 * @link http://www.paulgraham.com/spam.html
 	 * 
 	 * @param int $wordSpamCount
