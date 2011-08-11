@@ -13,6 +13,11 @@ class Antispam
 		$this->corpus = $corpus;
 	}
 	
+	/**
+	 * Set window size of decision matrix
+	 * 
+	 * @param int $windowSize
+	 */
 	public function setWindow($windowSize)
 	{
 		$this->window = $windowSize;

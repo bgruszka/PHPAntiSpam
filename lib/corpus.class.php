@@ -38,6 +38,12 @@ class Corpus
 		}	
 	}
 	
+	/**
+	 * Normalize word
+	 * 
+	 * @param string $word
+	 * @return string
+	 */
 	private function normalizeWord($word)
 	{
 		return strtolower(trim($word));
