@@ -25,6 +25,7 @@ class AntispamTest extends PHPUnit_Framework_TestCase
 		
 		$this->corpus = new Corpus($messages);
 		$this->antispam = new Antispam($this->corpus);
+		$this->antispam->setWindow(Antispam::GRAHAM_WINDOW);
 	}
 	
 	public function testMessageIsSpam()

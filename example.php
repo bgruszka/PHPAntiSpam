@@ -29,6 +29,7 @@ function getMessages() {
 $messages = getMessages();
 $corpus = new Corpus($messages);
 $antispam = new Antispam($corpus);
+$antispam->setWindow(Antispam::GRAHAM_WINDOW);
 
 $message = 'This promotion is sponsored exclusively by Vindale Research';
 

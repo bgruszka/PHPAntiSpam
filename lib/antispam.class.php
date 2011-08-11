@@ -2,11 +2,20 @@
 
 class Antispam 
 {
+	const GRAHAM_WINDOW = 15;
+	const BURTON_WINDOW = 27;
+	
 	protected $corpus;
 	private $neutral = 0.5;
 	
-	public function __construct(Corpus $corpus) {
+	public function __construct(Corpus $corpus) 
+	{
 		$this->corpus = $corpus;
+	}
+	
+	public function setWindow($windowSize)
+	{
+		$this->window = $windowSize;
 	}
 	
 	/**
@@ -124,7 +133,7 @@ class Antispam
 		$decisionMatrix = $this->createDecisionMatrix($words);
 		
 		// need only first 15
-		$mostImportantLexemes = array_slice($decisionMatrix, 0, 15);
+		$mostImportantLexemes = array_slice($decisionMatrix, 0, $this->window);
 		
 		$result = $this->bayes($mostImportantLexemes);
 		
