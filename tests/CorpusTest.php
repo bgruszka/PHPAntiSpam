@@ -17,7 +17,8 @@ class CorpusTest extends PHPUnit_Framework_TestCase
 			)
 		);
 		
-		$this->corpus = new Corpus($messages);
+		$separators = '/[-, ]/';
+		$this->corpus = new Corpus($messages, $separators);
 	}
 	
 	public function testMessagesCount()

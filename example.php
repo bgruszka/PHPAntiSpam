@@ -27,7 +27,9 @@ function getMessages() {
 }
 
 $messages = getMessages();
-$corpus = new Corpus($messages);
+$separators = '/[-, ]/';
+
+$corpus = new Corpus($messages, $separators);
 $antispam = new Antispam($corpus);
 $antispam->setWindow(Antispam::GRAHAM_WINDOW);
 

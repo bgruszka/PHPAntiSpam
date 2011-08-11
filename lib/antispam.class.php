@@ -128,11 +128,10 @@ class Antispam
 			$this->corpus->lexemes[$word]['probability'] = $probability;
 		}
 		
-		$words = explode(' ', $text);
+		$words = preg_split($this->corpus->separators, $text);
 		
 		$decisionMatrix = $this->createDecisionMatrix($words);
 		
-		// need only first 15
 		$mostImportantLexemes = array_slice($decisionMatrix, 0, $this->window);
 		
 		$result = $this->bayes($mostImportantLexemes);

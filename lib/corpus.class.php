@@ -4,31 +4,23 @@ class Corpus
 {
 	
 	protected $messages = array();
+	public $separators = null;
 	public $lexemes = array();
 	public $messagesCount = array('spam' => 0, 'nospam' => 0);
 	
-	public function __construct($messages)
+	public function __construct($messages, $separators)
 	{
 		$this->messages = $messages;
+		$this->separators = $separators;
 		
 		// next
 		foreach($this->messages as $message) {
 			$this->messagesCount[$message['category']]++;
-			
-			$message['content'] = str_replace(
-				array(
-					'.', ',', ';', '"', ':', '?', 
-					'!', '+', '-', '/', '*', '=', 
-					'<', '>', '|', '&', '~', '`', '@'
-				), 
-				' ',
-				$message['content']
-		    );
 		    
-			$words = explode(' ', $message['content']);
+			$words = preg_split($this->separators, $message['content']);
 		
 			foreach($words as $key => $word) {
-				$word = strtolower(trim($word));
+				$word = $this->normalizeWord($word);
 				if(strlen($word) > 4) {
 					if(!empty($word)) {
 						if(in_array($word, array_keys($this->lexemes))) {
@@ -44,6 +36,11 @@ class Corpus
 				}
 			}
 		}	
+	}
+	
+	private function normalizeWord($word)
+	{
+		return strtolower(trim($word));
 	}
 	
 }

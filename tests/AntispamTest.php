@@ -23,7 +23,9 @@ class AntispamTest extends PHPUnit_Framework_TestCase
 			$messages[] = $message;
 		}
 		
-		$this->corpus = new Corpus($messages);
+		$separators = '/[-, ]/';
+		
+		$this->corpus = new Corpus($messages, $separators);
 		$this->antispam = new Antispam($this->corpus);
 		$this->antispam->setWindow(Antispam::GRAHAM_WINDOW);
 	}
