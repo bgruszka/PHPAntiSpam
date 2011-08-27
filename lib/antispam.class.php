@@ -2,10 +2,14 @@
 
 class Antispam 
 {
+	const GRAHAM_METHOD = 1;
+	const BURTON_METHOD = 2;
+	
 	const GRAHAM_WINDOW = 15;
 	const BURTON_WINDOW = 27;
 	
-	protected $corpus;
+	protected $corpus, $method;
+	
 	private $neutral = 0.5;
 	
 	public function __construct(Corpus $corpus) 
@@ -18,9 +22,23 @@ class Antispam
 	 * 
 	 * @param int $windowSize
 	 */
-	public function setWindow($windowSize)
+	private function __setWindow($windowSize)
 	{
 		$this->window = $windowSize;
+	}
+	
+	public function setMethod($method)
+	{
+		$this->method = $method;
+		
+		switch($this->method) {
+			case self::GRAHAM_METHOD:
+				$this->__setWindow(self::GRAHAM_WINDOW);
+				break;
+			case self::BURTON_METHOD:
+				$this->__setWindow(self::BURTON_WINDOW);
+				break;
+		}
 	}
 	
 	/**
@@ -84,6 +102,40 @@ class Antispam
 	}
 	
 	/**
+	 * Add one word in decision matrix
+	 * 
+	 * @param array $decisionMatrix
+	 * @param array $usefulnessArray
+	 * @param string $word
+	 * @param float $probability
+	 */
+	private function __add_one_word_in_matrix(array &$decisionMatrix, array &$usefulnessArray, $word, $probability)
+	{
+		// distance from neutral value
+		$usefulness = abs($this->neutral - $probability);
+		
+		$decisionMatrix[$word]['probability'] = $probability;
+		$decisionMatrix[$word]['usefulness'] = $usefulness;
+		$usefulnessArray[] = $usefulness;
+	}
+	
+	/**
+	 * Add double word in decision matrix
+	 * 
+	 * @param array $decisionMatrix
+	 * @param array $usefulnessArray
+	 * @param string $word
+	 * @param float $probability
+	 */
+	private function __add_double_word_in_matrix(array &$decisionMatrix, array &$usefulnessArray, $word, $probability)
+	{
+		for($i = 1; $i <= 2; $i++) {
+			$wordForMatrix = $word . $i;
+			$this->__add_one_word_in_matrix($decisionMatrix, $usefulnessArray, $wordForMatrix, $probability);
+		}
+	}
+	
+	/**
 	 * Create decision matrix
 	 * 
 	 * @param array $words
@@ -92,12 +144,14 @@ class Antispam
 	 */
 	public function createDecisionMatrix(array $words)
 	{
-		$usefulnessArray = array();
-		$decisionMatrix = array();
+		$usefulnessArray	= array();
+		$decisionMatrix		= array();
+		$processedWords		= array();	
+		$wordOcurrencies	= array_count_values($words);
 		
 		foreach($words as $word) {
 			$word = trim($word);
-			if(strlen($word) > 0) {
+			if(strlen($word) > 0 && !in_array($word, $processedWords)) {
 				// first occurence of lexeme (unit lexeme)
 				if(!isset($this->corpus->lexemes[$word])) {
 					// set default / neutral lexeme probability
@@ -106,10 +160,13 @@ class Antispam
 					$probability = $this->corpus->lexemes[$word]['probability'];
 				}
 				
-				$usefulness = abs($this->neutral - $probability); // distance from neutral value
-				$decisionMatrix[$word]['probability'] = $probability;
-				$decisionMatrix[$word]['usefulness'] = $usefulness;
-				$usefulnessArray[] = $usefulness;
+				if($this->method == self::BURTON_METHOD && $wordOcurrencies[$word] > 1) {
+					$this->__add_double_word_in_matrix($decisionMatrix, $usefulnessArray, $word, $probability);
+				} else {
+					$this->__add_one_word_in_matrix($decisionMatrix, $usefulnessArray, $word, $probability);
+				}
+				
+				$processedWords[] = $word;
 			}
 		}
 		
@@ -138,7 +195,7 @@ class Antispam
 		$decisionMatrix = $this->createDecisionMatrix($words);
 		
 		$mostImportantLexemes = array_slice($decisionMatrix, 0, $this->window);
-		
+
 		$result = $this->bayes($mostImportantLexemes);
 		
 		return $result;

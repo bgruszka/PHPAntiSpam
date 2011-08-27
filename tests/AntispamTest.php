@@ -27,18 +27,37 @@ class AntispamTest extends PHPUnit_Framework_TestCase
 		
 		$this->corpus = new Corpus($messages, $separators);
 		$this->antispam = new Antispam($this->corpus);
-		$this->antispam->setWindow(Antispam::GRAHAM_WINDOW);
 	}
 	
-	public function testMessageIsSpam()
+	public function testMessageIsSpamGrahamMethod()
 	{
 		$message = 'Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
+		
+		$this->antispam->setMethod(Antispam::GRAHAM_METHOD);
 		$this->assertGreaterThan(0.9, $this->antispam->isSpam($message));
 	}
 	
-	public function testMessageIsNotSpam()
+	public function testMessageIsNotSpamGrahamMethod()
 	{
-		$message = 'Dzień Programisty wypada 13 września';
+		$message = 'Dzień Programisty wypada 13 września.';
+		
+		$this->antispam->setMethod(Antispam::GRAHAM_METHOD);
+		$this->assertLessThan(0.9, $this->antispam->isSpam($message));
+	}
+	
+	public function testMessageIsSpamBurtonMethod()
+	{
+		$message = 'Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
+		
+		$this->antispam->setMethod(Antispam::BURTON_METHOD);
+		$this->assertGreaterThan(0.9, $this->antispam->isSpam($message));
+	}
+	
+	public function testMessageIsNotSpamBurtonMethod()
+	{
+		$message = 'Dzień Programisty wypada 13 września.';
+		
+		$this->antispam->setMethod(Antispam::BURTON_METHOD);
 		$this->assertLessThan(0.9, $this->antispam->isSpam($message));
 	}
 }
