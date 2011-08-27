@@ -31,7 +31,7 @@ $separators = '/[-, ]/';
 
 $corpus = new Corpus($messages, $separators);
 $antispam = new Antispam($corpus);
-$antispam->setWindow(Antispam::GRAHAM_WINDOW);
+$antispam->setMethod(Antispam::GRAHAM_METHOD);
 
 $message = 'This promotion is sponsored exclusively by Vindale Research';
 
