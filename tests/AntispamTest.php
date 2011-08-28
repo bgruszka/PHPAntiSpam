@@ -60,6 +60,24 @@ class AntispamTest extends PHPUnit_Framework_TestCase
 		$this->antispam->setMethod(Antispam::BURTON_METHOD);
 		$this->assertLessThan(0.9, $this->antispam->isSpam($message));
 	}
+	
+	public function testMessageIsSpamRobinsonGeometricMeanTestMethod()
+	{
+		$message = 'Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
+		
+		$this->antispam->setMethod(Antispam::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD);
+		$result = $this->antispam->isSpam($message);
+		$this->assertGreaterThan(0.55, $result['spamminess']);
+	}
+	
+	public function testMessageIsNotSpamRobinsonGeometricMeanTestMethod()
+	{
+		$message = 'Dzień Programisty wypada 13 września.';
+		
+		$this->antispam->setMethod(Antispam::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD);
+		$result = $this->antispam->isSpam($message);
+		$this->assertLessThan(0.55, $result['spamminess']);
+	}
 }
 
 ?>
