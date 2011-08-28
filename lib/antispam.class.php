@@ -163,6 +163,7 @@ class Antispam
 	 * results similar to Robinson's geometric mean test, in which the result
 	 * of calculation may fall within midrange of values to indicate a level 
 	 * of uncertainty.
+	 * @link http://www.linuxjournal.com/article/6467
 	 * 
 	 * @param array $lexemes
 	 * 
