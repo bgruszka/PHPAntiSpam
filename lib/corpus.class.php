@@ -17,7 +17,7 @@ class Corpus
 		foreach($this->messages as $message) {
 			$this->messagesCount[$message['category']]++;
 		    
-			$words = preg_split($this->separators, $message['content']);
+			$words = preg_split($this->separators, $message['content'], null, PREG_SPLIT_NO_EMPTY);
 		
 			foreach($words as $key => $word) {
 				$word = $this->normalizeWord($word);
