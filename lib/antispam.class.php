@@ -4,9 +4,11 @@ class Antispam
 {
 	const GRAHAM_METHOD = 1;
 	const BURTON_METHOD = 2;
+	const ROBINSON_GEOMETRIC_MEAN_TEST_METHOD = 3;
 	
-	const GRAHAM_WINDOW = 15;
-	const BURTON_WINDOW = 27;
+	const GRAHAM_WINDOW		= 15;
+	const ROBINSON_WINDOW	= 15;
+	const BURTON_WINDOW		= 27;
 	
 	protected $corpus, $method;
 	
@@ -37,6 +39,9 @@ class Antispam
 				break;
 			case self::BURTON_METHOD:
 				$this->__setWindow(self::BURTON_WINDOW);
+				break;
+			case self::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD:
+				$this->__setWindow(self::ROBINSON_WINDOW);
 				break;
 		}
 	}
@@ -99,6 +104,33 @@ class Antispam
 		$result = $numerator / ($numerator + $denominator);
 		
 		return $result;
+	}
+	
+	/**
+	 * Ribinson's geometric mean test measures both the "spamminess" and "hamminess" of 
+	 * the data in the decision matrix and also provides more granular results ranging 
+	 * between 0 percen and 100 percent. Generally, a result of round 55 percent or 
+	 * higher using Robinson's algorithm is an indicator of spam
+	 * 
+	 * @param array $lexemes
+	 * 
+	 * @return array
+	 */
+	public function robinson_geometric_mean_test(array $lexemes)
+	{
+		$spamminess = 1;
+		$hamminess = 1;
+		
+		foreach($lexemes as $lexeme) {
+			$spamminess *= (1 - $lexeme['probability']);
+			$hamminess *= $lexeme['probability'];
+		}
+		
+		$spamminess	= 1 - pow($spamminess, 1 / count($lexemes));
+		$hamminess	= 1 - pow($hamminess, 1 / count($lexemes));
+		$combined	= (1 + (($spamminess - $hamminess) / ($spamminess + $hamminess))) / 2;
+		
+		return array('spamminess' => $spamminess, 'hamminess' => $hamminess, 'combined' => $combined);
 	}
 	
 	/**
@@ -196,8 +228,16 @@ class Antispam
 		
 		$mostImportantLexemes = array_slice($decisionMatrix, 0, $this->window);
 
-		$result = $this->bayes($mostImportantLexemes);
-		
+		switch($this->method) {
+			case self::GRAHAM_METHOD:
+			case self::BURTON_METHOD:
+				$result = $this->bayes($mostImportantLexemes);
+				break;
+			case self::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD:
+				$result = $this->robinson_geometric_mean_test($mostImportantLexemes);
+				break;
+		}
+			
 		return $result;
 	}
 }
