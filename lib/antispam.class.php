@@ -171,8 +171,6 @@ class Antispam
 	 */
 	public function fisher_robinsons_inverse_chi_square_test(array $lexemes)
 	{
-		$spamminess = 1;
-		$hamminess = 1;
 		$wordsProductProbability = 1;
 		$wordsProductProbabilitySubstraction = 1;
 		
@@ -205,7 +203,7 @@ class Antispam
 		
 		$decisionMatrix[$word]['probability'] = $probability;
 		$decisionMatrix[$word]['usefulness'] = $usefulness;
-		$usefulnessArray[] = $usefulness;
+		$usefulnessArray[$word] = $usefulness;
 	}
 	
 	/**
@@ -236,10 +234,14 @@ class Antispam
 		$usefulnessArray	= array();
 		$decisionMatrix		= array();
 		$processedWords		= array();	
+
+        foreach($words as $key => $word) {
+            $words[$key] = trim($word);
+        }
+
 		$wordOcurrencies	= array_count_values($words);
 		
 		foreach($words as $word) {
-			$word = trim($word);
 			if(strlen($word) > 0 && !in_array($word, $processedWords)) {
 				// first occurence of lexeme (unit lexeme)
 				if(!isset($this->corpus->lexemes[$word])) {
@@ -285,12 +287,12 @@ class Antispam
 		foreach($words as $word) {
 			$word = trim($word);
 			if(strlen($word) > 0 && !in_array($word, $processedWords)) {
-				if($this->corpus->lexemes[$word]) {
+				if(isset($this->corpus->lexemes[$word])) {
 					$isInRanges = $this->corpus->lexemes[$word]['probability'] <= 0.1 || $this->corpus->lexemes[$word]['probability'] >= 0.9;
 					if($isInRanges) {
 						$decisionMatrix[$word]['probability'] = $this->corpus->lexemes[$word]['probability'];
 						$processedWords[] = $word;
-					}	
+					}
 				}
 			}
 		}
@@ -298,7 +300,7 @@ class Antispam
 		return $decisionMatrix;
 	}
 	
-	public function isSpam($text)
+	public function isSpam($text, $useBigrams = false)
 	{	
 		foreach($this->corpus->lexemes as $word => $value) {
 			$graham = $this->graham(
@@ -312,8 +314,20 @@ class Antispam
 			$this->corpus->lexemes[$word]['probability'] = $probability;
 		}
 		
-		$words = preg_split($this->corpus->separators, $text);
-		
+		$words = array_map(function($word) {
+            return strtolower($word);
+        }, preg_split($this->corpus->separators, $text));
+
+        if($useBigrams) {
+            $bigrams = array();
+
+            for($i = 0; $i < count($words) - 1; $i++) {
+                $bigrams[] = $words[$i].' '.$words[$i+1];
+            }
+
+            $words = $bigrams;
+        }
+
 		if($this->method != self::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD) {
 			$decisionMatrix = $this->__createDecisionMatrix($words);
 		} else {

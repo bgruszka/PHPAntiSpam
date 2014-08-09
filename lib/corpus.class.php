@@ -8,7 +8,7 @@ class Corpus
 	public $lexemes = array();
 	public $messagesCount = array('spam' => 0, 'nospam' => 0);
 	
-	public function __construct($messages, $separators)
+	public function __construct($messages, $separators, $useBigrams = false)
 	{
 		$this->messages = $messages;
 		$this->separators = $separators;
@@ -16,27 +16,35 @@ class Corpus
 		// next
 		foreach($this->messages as $message) {
 			$this->messagesCount[$message['category']]++;
-		    
-			$words = preg_split($this->separators, $message['content'], null, PREG_SPLIT_NO_EMPTY);
-		
+
+            $words = preg_split($this->separators, $message['content'], null, PREG_SPLIT_NO_EMPTY);
+
+            if($useBigrams) {
+                $bigrams = array();
+
+                for($i = 0; $i < count($words) - 1; $i++) {
+                    $bigrams[] = $words[$i].' '.$words[$i+1];
+                }
+
+                $words = $bigrams;
+            }
+
 			foreach($words as $key => $word) {
 				$word = $this->normalizeWord($word);
 				if(strlen($word) > 4) {
-					if(!empty($word)) {
-						if(in_array($word, array_keys($this->lexemes))) {
-								$this->lexemes[$word][$message['category']]++;
-						} else {
-							if($message['category'] == 'spam') {
-								$this->lexemes[$word] = array('spam' => 1, 'nospam' => 0);
-							} else {
-								$this->lexemes[$word] = array('spam' => 0, 'nospam' => 1);
-							}
-						}
-					}
-				}
-			}
-		}	
-	}
+                    if(isset($this->lexemes[$word])) {
+                        $this->lexemes[$word][$message['category']]++;
+                    } else {
+                        if($message['category'] == 'spam') {
+                            $this->lexemes[$word] = array('spam' => 1, 'nospam' => 0);
+                        } else {
+                            $this->lexemes[$word] = array('spam' => 0, 'nospam' => 1);
+                        }
+                    }
+                }
+            }
+        }
+    }
 	
 	/**
 	 * Normalize word
