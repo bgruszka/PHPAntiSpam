@@ -8,7 +8,7 @@ user is over quota
 
 --- Below this line is a copy of the message.
 
-Return-Path: <sniipe@gmail.com>
+Return-Path: <spe@gmail.com>
 Received: (qmail 20827 invoked by uid 89); 10 Sep 2010 20:56:24 -0000
 Received: from unknown (HELO gt-942a8f3fb9e6) (190.209.110.75)
  by 0 with SMTP; 10 Sep 2010 20:56:24 -0000
@@ -20,8 +20,8 @@ Received: from unknown (HELO gt-942a8f3fb9e6) (190.209.110.75)
 			Fri, 10 Sep 2010 11:42:54 -0400
 			Date: Fri, 10 Sep 2010 11:42:54 -0400
 			To: <sniipes@pc.nu>
-			From: <sniipe@gmail.com>
-			Reply-to: sniipe@gmail.com
+			From: <spe@gmail.com>
+			Reply-to: spe@gmail.com
 			Subject: [The best Canada-Pharma good store]
 			Message-ID: <201009101542600egdrg@localhost.localdomain>
 			MIME-Version: 1.0
