@@ -128,9 +128,6 @@ class AntiSpamTest extends PHPUnit_Framework_TestCase
         $AntiSpam = new AntiSpam($corpus);
         $AntiSpam->setMethod(AntiSpam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
 
-
-		
-
 		$result = $AntiSpam->isSpam($message);
 		$this->assertGreaterThan(0.55, $result['combined']);
 	}
