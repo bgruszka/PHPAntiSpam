@@ -1,6 +1,8 @@
 <?php
 
-class Antispam 
+namespace PHPAntiSpam;
+
+class AntiSpam
 {
 	const GRAHAM_METHOD = 1;
 	const BURTON_METHOD = 2;

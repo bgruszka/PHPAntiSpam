@@ -1,9 +1,9 @@
 <?php
 
-require_once realpath(dirname(__FILE__)) . '/../src/Corpus.php';
-require_once realpath(dirname(__FILE__)) . '/../src/Antispam.php';
+use PHPAntiSpam\AntiSpam;
+use PHPAntiSpam\Corpus;
 
-class AntispamTest extends PHPUnit_Framework_TestCase
+class AntiSpamTest extends PHPUnit_Framework_TestCase
 {
     private $messages = array();
     private $separators = '/[-, ]/';
@@ -57,10 +57,10 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Disclaimer: According to the BLS (2010), a Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::GRAHAM_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::GRAHAM_METHOD);
 
-		$this->assertGreaterThan(0.9, $antispam->isSpam($message));
+		$this->assertGreaterThan(0.9, $AntiSpam->isSpam($message));
 	}
 	
 	public function testMessageIsNotSpamGrahamMethod()
@@ -68,10 +68,10 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Dzień Programisty wypada 13 września.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::GRAHAM_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::GRAHAM_METHOD);
 
-		$this->assertLessThan(0.9, $antispam->isSpam($message));
+		$this->assertLessThan(0.9, $AntiSpam->isSpam($message));
 	}
 	
 	public function testMessageIsSpamBurtonMethod()
@@ -79,10 +79,10 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Disclaimer: According to the BLS (2010), a Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::BURTON_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::BURTON_METHOD);
 
-		$this->assertGreaterThan(0.9, $antispam->isSpam($message));
+		$this->assertGreaterThan(0.9, $AntiSpam->isSpam($message));
 	}
 	
 	public function testMessageIsNotSpamBurtonMethod()
@@ -90,10 +90,10 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Dzień Programisty wypada 13 września.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::BURTON_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::BURTON_METHOD);
 
-		$this->assertLessThan(0.9, $antispam->isSpam($message));
+		$this->assertLessThan(0.9, $AntiSpam->isSpam($message));
 	}
 	
 	public function testMessageIsSpamRobinsonGeometricMeanTestMethod()
@@ -101,10 +101,10 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Disclaimer: According to the BLS (2010), a Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD);
 
-		$result = $antispam->isSpam($message);
+		$result = $AntiSpam->isSpam($message);
 		$this->assertGreaterThan(0.55, $result['combined']);
 	}
 	
@@ -113,10 +113,10 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Dzień Programisty wypada 13 września.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD);
 
-		$result = $antispam->isSpam($message);
+		$result = $AntiSpam->isSpam($message);
 		$this->assertLessThan(0.55, $result['combined']);
 	}
 	
@@ -125,13 +125,13 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Disclaimer: According to the BLS (2010), a Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
 
 
 		
 
-		$result = $antispam->isSpam($message);
+		$result = $AntiSpam->isSpam($message);
 		$this->assertGreaterThan(0.55, $result['combined']);
 	}
 	
@@ -140,17 +140,17 @@ class AntispamTest extends PHPUnit_Framework_TestCase
         $message = 'Dzień Programisty wypada 13 września.';
 
         $corpus = new Corpus($this->messages, $this->separators);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
 
-		$result = $antispam->isSpam($message);
+		$result = $AntiSpam->isSpam($message);
 		$this->assertLessThan(0.55, $result['combined']);
 
         $corpus = new Corpus($this->messages, $this->separators, true);
-        $antispam = new Antispam($corpus);
-        $antispam->setMethod(Antispam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
+        $AntiSpam = new AntiSpam($corpus);
+        $AntiSpam->setMethod(AntiSpam::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD);
 
-        $result = $antispam->isSpam($message, true);
+        $result = $AntiSpam->isSpam($message, true);
         $this->assertLessThan(0.55, $result['combined']);
 	}
 }
