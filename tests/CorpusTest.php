@@ -1,6 +1,6 @@
 <?php
 
-require_once realpath(dirname(__FILE__)) . '/../lib/corpus.class.php';
+require_once realpath(dirname(__FILE__)) . '/../src/Corpus.php';
 
 class CorpusTest extends PHPUnit_Framework_TestCase
 {

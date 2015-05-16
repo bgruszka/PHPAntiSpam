@@ -1,7 +1,7 @@
 <?php
 
-require_once realpath(dirname(__FILE__)) . '/../lib/corpus.class.php';
-require_once realpath(dirname(__FILE__)) . '/../lib/antispam.class.php';
+require_once realpath(dirname(__FILE__)) . '/../src/Corpus.php';
+require_once realpath(dirname(__FILE__)) . '/../src/Antispam.php';
 
 class AntispamTest extends PHPUnit_Framework_TestCase
 {

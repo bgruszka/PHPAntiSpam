@@ -1,7 +1,7 @@
 <?php 
 
-require_once 'lib/antispam.class.php';
-require_once 'lib/corpus.class.php';
+require_once 'src/Antispam.php';
+require_once 'src/Corpus.php';
 
 function getMessages() {
 	$dirs = array('spam', 'nospam');
