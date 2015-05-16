@@ -1,5 +1,7 @@
 <?php
 
+namespace PHPAntiSpam;
+
 class Corpus
 {
 	

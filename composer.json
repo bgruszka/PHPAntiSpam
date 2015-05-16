@@ -13,6 +13,6 @@
     "phpunit/phpunit": "4.6.*"
   },
   "autoload": {
-    "psr-4": {"bgruszka\\": "src/"}
+    "psr-4": {"PHPAntiSpam\\": "src/"}
   }
 }

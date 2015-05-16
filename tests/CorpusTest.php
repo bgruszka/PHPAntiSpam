@@ -1,6 +1,6 @@
 <?php
 
-require_once realpath(dirname(__FILE__)) . '/../src/Corpus.php';
+use PHPAntiSpam\Corpus;
 
 class CorpusTest extends PHPUnit_Framework_TestCase
 {

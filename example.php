@@ -1,7 +1,9 @@
 <?php 
 
-require_once 'src/Antispam.php';
-require_once 'src/Corpus.php';
+require_once 'vendor/autoload.php';
+
+use PHPAntiSpam\Corpus;
+use PHPAntiSpam\AntiSpam;
 
 function getMessages() {
 	$dirs = array('spam', 'nospam');
