@@ -2,6 +2,9 @@
 
 namespace PHPAntiSpam;
 
+use PHPAntiSpam\DecisionMatrix\DecisionMatrix;
+use PHPAntiSpam\Method\MethodInterface;
+
 class AntiSpam
 {
 	const GRAHAM_METHOD = 1;
@@ -13,61 +16,16 @@ class AntiSpam
 	const ROBINSON_WINDOW	= 15;
 	const BURTON_WINDOW		= 27;
 	
-	protected $corpus, $method;
+	protected $corpus;
 	
 	private $neutral = 0.5;
+
+    /** @var  MethodInterface */
+    protected $method;
 	
-	public function __construct(Corpus $corpus) 
-	{
-		$this->corpus = $corpus;
-	}
-	
-	/**
-	 * Set window size of decision matrix
-	 * 
-	 * @param int $windowSize
-	 */
-	private function __setWindow($windowSize)
-	{
-		$this->window = $windowSize;
-	}
-	
-	public function setMethod($method)
+	public function setMethod(MethodInterface $method)
 	{
 		$this->method = $method;
-		
-		switch($this->method) {
-			case self::GRAHAM_METHOD:
-				$this->__setWindow(self::GRAHAM_WINDOW);
-				break;
-			case self::BURTON_METHOD:
-				$this->__setWindow(self::BURTON_WINDOW);
-				break;
-			case self::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD:
-				$this->__setWindow(self::ROBINSON_WINDOW);
-				break;
-		}
-	}
-	
-	/**
-	 * Calculate lexeme value with Paul Graham method. 
-	 * To prevent over-interpreting the messages as spam, 
-	 * the number of instances of innocent lexemes is 
-	 * multiplied by 2.
-	 * @link http://www.paulgraham.com/spam.html
-	 * 
-	 * @param int $wordSpamCount
-	 * @param int $wordNoSpamCount
-	 * @param int $spamMessagesCount
-	 * @param int $noSpamMessagesCount
-	 * 
-	 * @return float
-	 */
-	public static function graham($wordSpamCount, $wordNoSpamCount, $spamMessagesCount, $noSpamMessagesCount) 
-	{
-		$value = ($wordSpamCount / $spamMessagesCount) / (($wordSpamCount/$spamMessagesCount) + ((2 * $wordNoSpamCount) / $noSpamMessagesCount));
-		
-		return $value;
 	}
 	
 	/**
@@ -233,41 +191,6 @@ class AntiSpam
 	 */
 	private function __createDecisionMatrix(array $words)
 	{
-		$usefulnessArray	= array();
-		$decisionMatrix		= array();
-		$processedWords		= array();	
-
-        foreach($words as $key => $word) {
-            $words[$key] = trim($word);
-        }
-
-		$wordOcurrencies	= array_count_values($words);
-		
-		foreach($words as $word) {
-			if(strlen($word) > 0 && !in_array($word, $processedWords)) {
-				// first occurence of lexeme (unit lexeme)
-				if(!isset($this->corpus->lexemes[$word])) {
-					// set default / neutral lexeme probability
-					$probability = $this->neutral;
-				} else {
-					$probability = $this->corpus->lexemes[$word]['probability'];
-				}
-				
-				if($this->method == self::BURTON_METHOD && $wordOcurrencies[$word] > 1) {
-					$this->__add_double_word_in_matrix($decisionMatrix, $usefulnessArray, $word, $probability);
-				} else {
-					$this->__add_one_word_in_matrix($decisionMatrix, $usefulnessArray, $word, $probability);
-				}
-				
-				$processedWords[] = $word;
-			}
-		}
-		
-		// sort by usefulness
-		array_multisort($usefulnessArray, SORT_DESC, $decisionMatrix);
-		$mostImportantLexemes = array_slice($decisionMatrix, 0, $this->window);
-		
-		return $mostImportantLexemes;
 	}
 	
 	/**
@@ -303,49 +226,26 @@ class AntiSpam
 	}
 	
 	public function isSpam($text, $useBigrams = false)
-	{	
-		foreach($this->corpus->lexemes as $word => $value) {
-			$graham = $this->graham(
-				$value['spam'], 
-				$value['nospam'], 
-				$this->corpus->messagesCount['spam'], 
-				$this->corpus->messagesCount['nospam']
-			);
-			
-			$probability = $this->robinson($value['spam'] + $value['nospam'], $graham);
-			$this->corpus->lexemes[$word]['probability'] = $probability;
-		}
-		
-		$words = array_map(function($word) {
-            return strtolower($word);
-        }, preg_split($this->corpus->separators, $text));
+	{
 
-        if($useBigrams) {
-            $bigrams = array();
 
-            for($i = 0; $i < count($words) - 1; $i++) {
-                $bigrams[] = $words[$i].' '.$words[$i+1];
-            }
-
-            $words = $bigrams;
-        }
-
-		if($this->method != self::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD) {
+		/*if($this->method != self::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD) {
 			$decisionMatrix = $this->__createDecisionMatrix($words);
 		} else {
 			$decisionMatrix = $this->__createFisherRobinsonDecisionMatrix($words);
-		}
+		}*/
 
 		switch($this->method) {
 			case self::GRAHAM_METHOD:
 			case self::BURTON_METHOD:
-				$result = $this->bayes($decisionMatrix);
+				$result = $this->method->calculate();
+                $result = $this->bayes($result);
 				break;
 			case self::ROBINSON_GEOMETRIC_MEAN_TEST_METHOD:
-				$result = $this->robinson_geometric_mean_test($decisionMatrix);
+				//$result = $this->robinson_geometric_mean_test($decisionMatrix);
 				break;
 			case self::FISHER_ROBINSONS_INVERSE_CHI_SQUARE_METHOD:
-				$result = $this->fisher_robinsons_inverse_chi_square_test($decisionMatrix);
+				//$result = $this->fisher_robinsons_inverse_chi_square_test($decisionMatrix);
 				break;
 		}
 			
