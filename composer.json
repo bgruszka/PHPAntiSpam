@@ -1,5 +1,5 @@
 {
-  "name": "bgruszka/PHPAntiSpam",
+  "name": "bgruszka/phpantispam",
   "description": "Bayesian spam recognition library",
   "minimum-stability": "dev",
   "license": "MIT",
