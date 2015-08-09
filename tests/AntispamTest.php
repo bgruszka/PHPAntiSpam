@@ -1,78 +1,65 @@
 <?php
 
-use PHPAntiSpam\AntiSpam;
-use PHPAntiSpam\Corpus;
+namespace PHPAntiSpam;
+
 use PHPAntiSpam\Method\GrahamMethod;
 
-class AntiSpamTest extends PHPUnit_Framework_TestCase
+class AntiSpamTest extends \PHPUnit_Framework_TestCase
 {
     private $messages = array();
-    private $separators = '/[-, ]/';
+    private $separators = '/[ ]/';
 
-    public function getMessages()
+    private $noSpamMessage = 'This is a ham message';
+    private $spamMessage = 'This is a spam message';
+
+    public function setMessages()
     {
-        $dirs = array('spam', 'nospam');
-
-        $messages = array();
-
-        foreach($dirs as $dir) {
-            $files = glob($dir.'/*.txt');
-
-            foreach($files as $file) {
-                $message = array();
-
-                $content = file_get_contents($file);
-
-                $message['content'] = $content;
-                $message['category'] = $dir;
-
-                $messages[] = $message;
-            }
-        }
-
-        return $messages;
-    }
-	public function setUp()
-	{
-		//$messages = $this->getMessages();
-
         $this->messages = array(
             array(
                 'category' => 'nospam',
-                'content' => 'Dzień Programisty wypada 13 września, a w roku przestępnym 12 września.'
+                'content' => $this->noSpamMessage,
+            ),
+            array(
+                'category' => 'spam',
+                'content' => $this->spamMessage,
             )
         );
-
-        $message = array(
-            'category' => 'spam',
-            'content' => 'Disclaimer: According to the BLS (2010), a Medical Assistant Technician can earn up to $40,190 / year. A degree is required.'
-        );
-
-        for($i = 0; $i < 5; $i++) {
-            $this->messages[] = $message;
-        }
+    }
+	public function setUp()
+	{
+		$this->setMessages();
 	}
 	
-	public function testMessageIsSpamGrahamMethod()
+	public function testIsSpamGrahamMethod()
 	{
-        $message = 'Disclaimer: According to the BLS (2010), a Medical Assistant Technician can earn up to $40,190 / year. A degree is required.';
+        $corpus = $this->getMockBuilder('\PHPAntiSpam\Corpus')
+                       ->disableOriginalConstructor()
+                       ->getMock();
 
-        $corpus = new Corpus($this->messages, $this->separators);
+        /** @var GrahamMethod $method */
+        $method = $this->getMockBuilder('\PHPAntiSpam\Method\GrahamMethod')
+                       ->disableOriginalConstructor()
+                       ->getMock();
+
+        $method->expects($this->once())
+               ->method('calculate')
+               ->will($this->returnValue(0.90));
+
         $AntiSpam = new AntiSpam($corpus);
-        $AntiSpam->setMethod(new GrahamMethod($corpus, $message));
+        $AntiSpam->setMethod($method);
 
-		$this->assertGreaterThan(0.9, $AntiSpam->isSpam($message));
+        $this->assertEquals(0.90, $AntiSpam->isSpam($this->spamMessage));
 	}
 	
 	public function testMessageIsNotSpamGrahamMethod()
 	{
-        $message = 'Dzień Programisty wypada 13 września.';
+        $this->markTestIncomplete();
 
-        $corpus = new Corpus($this->messages, $this->separators);
+        /*$corpus = new Corpus($this->messages, $this->separators);
         $AntiSpam = new AntiSpam($corpus);
-        $AntiSpam->setMethod(new GrahamMethod($corpus, $message));
+        $AntiSpam->setMethod(new GrahamMethod($corpus, $this->noSpamMessage));
 
-		$this->assertLessThan(0.9, $AntiSpam->isSpam($message));
+		$this->assertLessThan(0.9, $AntiSpam->isSpam());*/
 	}
 	
 	/*public function testMessageIsSpamBurtonMethod()
