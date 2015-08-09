@@ -2,6 +2,7 @@
 
 namespace PHPAntiSpam\Method;
 
-interface MethodInterface {
+interface MethodInterface
+{
     function calculate($text);
 }

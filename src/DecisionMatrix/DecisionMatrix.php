@@ -46,7 +46,7 @@ abstract class DecisionMatrix
      */
     protected function addDoubleWord(array &$usefulnessArray, $word, $probability)
     {
-        for($i = 1; $i <= 2; $i++) {
+        for ($i = 1; $i <= 2; $i++) {
             $word = $word . $i;
             $this->addWord($usefulnessArray, $word, $probability);
         }

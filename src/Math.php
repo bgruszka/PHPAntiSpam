@@ -15,7 +15,7 @@ abstract class Math
     {
         $numerator = 1;
         $denominator = 1;
-        foreach($lexemes as $lexeme) {
+        foreach ($lexemes as $lexeme) {
             $numerator *= $lexeme['probability'];
             $denominator *= 1 - $lexeme['probability'];
         }
@@ -58,14 +58,14 @@ abstract class Math
         $spamminess = 1;
         $hamminess = 1;
 
-        foreach($lexemes as $lexeme) {
+        foreach ($lexemes as $lexeme) {
             $spamminess *= (1 - $lexeme['probability']);
             $hamminess *= $lexeme['probability'];
         }
 
-        $spamminess	= 1 - pow($spamminess, 1 / count($lexemes));
-        $hamminess	= 1 - pow($hamminess, 1 / count($lexemes));
-        $combined	= (1 + (($spamminess - $hamminess) / ($spamminess + $hamminess))) / 2;
+        $spamminess = 1 - pow($spamminess, 1 / count($lexemes));
+        $hamminess = 1 - pow($hamminess, 1 / count($lexemes));
+        $combined = (1 + (($spamminess - $hamminess) / ($spamminess + $hamminess))) / 2;
 
         return array('spamminess' => $spamminess, 'hamminess' => $hamminess, 'combined' => $combined);
     }
@@ -84,7 +84,7 @@ abstract class Math
         $s = exp(-$m);
         $t = $s;
 
-        for($i = 1; $i < ($v/2); $i++) {
+        for ($i = 1; $i < ($v / 2); $i++) {
             $t *= $m / $i;
             $s += $t;
         }
@@ -110,9 +110,9 @@ abstract class Math
         $wordsProductProbability = 1;
         $wordsProductProbabilitySubstraction = 1;
 
-        foreach($lexemes as $lexeme) {
+        foreach ($lexemes as $lexeme) {
             $wordsProductProbability *= $lexeme['probability'];
-            $wordsProductProbabilitySubstraction *= 1- $lexeme['probability'];
+            $wordsProductProbabilitySubstraction *= 1 - $lexeme['probability'];
         }
 
         $hamminess = $this->__chi2Q(-2 * log($wordsProductProbability), 2 * count($lexemes));

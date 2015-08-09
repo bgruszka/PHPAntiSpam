@@ -14,14 +14,14 @@ class FisherRobinsonDecisionMatrix extends DecisionMatrix implements DecisionMat
     public function getMostImportantLexemes()
     {
         $decisionMatrix = array();
-        $processedWords	= array();
+        $processedWords = array();
 
-        foreach($this->words as $word) {
+        foreach ($this->words as $word) {
             $word = trim($word);
-            if(strlen($word) > 0 && !in_array($word, $processedWords)) {
-                if(isset($this->corpus->lexemes[$word])) {
+            if (strlen($word) > 0 && !in_array($word, $processedWords)) {
+                if (isset($this->corpus->lexemes[$word])) {
                     $isInRanges = $this->corpus->lexemes[$word]['probability'] <= 0.1 || $this->corpus->lexemes[$word]['probability'] >= 0.9;
-                    if($isInRanges) {
+                    if ($isInRanges) {
                         $decisionMatrix[$word]['probability'] = $this->corpus->lexemes[$word]['probability'];
                         $processedWords[] = $word;
                     }
