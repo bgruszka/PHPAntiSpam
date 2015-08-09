@@ -1,16 +1,18 @@
 <?php
 
 namespace PHPAntiSpam\Method;
+
+use PHPAntiSpam\DecisionMatrix\DefaultDecisionMatrix;
+use PHPAntiSpam\Math;
 use PHPAntiSpam\Corpus;
-use PHPAntiSpam\DecisionMatrix\DecisionMatrix;
 
 /**
  * Class GrahamMethod
  * @package PHPAntiSpam\Method
  */
-class GrahamMethod implements MethodInterface
+class GrahamMethod extends Math implements MethodInterface
 {
-    protected $windowSize = 15;
+    const WINDOW_SIZE = 15;
 
     protected $bias = true;
 
@@ -20,28 +22,31 @@ class GrahamMethod implements MethodInterface
     /** @var  Corpus */
     protected $corpus;
 
-    public function __construct(Corpus $corpus, $text)
+    public function __construct(Corpus $corpus)
     {
         $this->corpus = $corpus;
-        $this->text = $text;
-
-        $words = array_map(function($word) {
-            return strtolower($word);
-        }, preg_split($this->corpus->separators, $this->text));
-
-        $this->decisionMatrix = new DecisionMatrix($words, $this->corpus, $this->windowSize);
     }
 
-    public function calculate()
+    public function setBias($bias)
     {
-        foreach($this->corpus->lexemes as $word => $value) {
-            $value = $this->calculateWordValue($value['spam'], $value['nospam'], $this->corpus->messagesCount['spam'], $this->corpus->messagesCount['nospam']);
+        $this->bias = $bias;
+    }
+
+    public function calculate($text)
+    {
+        $this->setDecisionMatrix($text);
+
+        foreach ($this->corpus->lexemes as $word => $value) {
+            $value = $this->calculateWordValue($value['spam'], $value['nospam'], $this->corpus->messagesCount['spam'],
+                $this->corpus->messagesCount['nospam']);
             $this->corpus->lexemes[$word]['probability'] = $value;
         }
 
         $mostImportantLexemes = $this->decisionMatrix->getMostImportantLexemes();
 
-        return $mostImportantLexemes;
+        $result = $this->bayes($mostImportantLexemes);
+
+        return $result;
     }
 
     /**
@@ -59,12 +64,21 @@ class GrahamMethod implements MethodInterface
     {
         $multiplier = 1;
 
-        if($this->bias) {
+        if ($this->bias) {
             $multiplier = 2;
         }
 
-        $value = ($wordSpamCount / $spamMessagesCount) / (($wordSpamCount/$spamMessagesCount) + (($multiplier * $wordNoSpamCount) / $noSpamMessagesCount));
+        $value = ($wordSpamCount / $spamMessagesCount) / (($wordSpamCount / $spamMessagesCount) + (($multiplier * $wordNoSpamCount) / $noSpamMessagesCount));
 
         return $value;
+    }
+
+    private function setDecisionMatrix($text)
+    {
+        $words = array_map(function ($word) {
+            return strtolower($word);
+        }, preg_split($this->corpus->separators, $text));
+
+        $this->decisionMatrix = new DefaultDecisionMatrix($words, $this->corpus, self::WINDOW_SIZE);
     }
 }

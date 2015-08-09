@@ -2,16 +2,33 @@
 
 namespace PHPAntiSpam\DecisionMatrix;
 
-class DecisionMatrix
+use PHPAntiSpam\Corpus;
+
+abstract class DecisionMatrix
 {
-    private $matrix = [];
-    private $words = [];
+    protected $matrix = [];
+    protected $words = [];
+
     /** @var  \PHPAntiSpam\Corpus */
-    private $corpus;
+    protected $corpus;
 
-    private $neutral = 0.5;
+    protected $neutral = 0.5;
 
-    private function addWord(&$usefulnessArray, $word, $probability)
+    public function __construct(array $words, Corpus $corpus, $window)
+    {
+        $this->words = $words;
+        $this->corpus = $corpus;
+        $this->window = $window;
+    }
+
+    /**
+     * Add word in decision matrix
+     *
+     * @param $usefulnessArray
+     * @param $word
+     * @param $probability
+     */
+    protected function addWord(&$usefulnessArray, $word, $probability)
     {
         $usefulness = abs($this->neutral - $probability);
 
@@ -20,42 +37,18 @@ class DecisionMatrix
         $usefulnessArray[$word] = $usefulness;
     }
 
-    public function __construct(array $words, \PHPAntiSpam\Corpus $corpus, $window)
+    /**
+     * Add double word in decision matrix
+     *
+     * @param array $usefulnessArray
+     * @param string $word
+     * @param float $probability
+     */
+    protected function addDoubleWord(array &$usefulnessArray, $word, $probability)
     {
-        $this->words = $words;
-        $this->corpus = $corpus;
-        $this->window = $window;
-    }
-
-    public function getMostImportantLexemes()
-    {
-        $usefulnessArray = array();
-        $processedWords = array();
-
-        foreach ($this->words as $key => $word) {
-            $this->words[$key] = trim($word);
+        for($i = 1; $i <= 2; $i++) {
+            $word = $word . $i;
+            $this->addWord($usefulnessArray, $word, $probability);
         }
-
-        foreach ($this->words as $word) {
-            if (strlen($word) > 0 && !in_array($word, $processedWords)) {
-                // first occurence of lexeme (unit lexeme)
-                if (!isset($this->corpus->lexemes[$word])) {
-                    // set default / neutral lexeme probability
-                    $probability = $this->neutral;
-                } else {
-                    $probability = $this->corpus->lexemes[$word]['probability'];
-                }
-
-                $this->addWord($usefulnessArray, $word, $probability);
-
-                $processedWords[] = $word;
-            }
-        }
-
-        // sort by usefulness
-        array_multisort($usefulnessArray, SORT_DESC, $this->matrix);
-        $mostImportantLexemes = array_slice($this->matrix, 0, $this->window);
-
-        return $mostImportantLexemes;
     }
 }
