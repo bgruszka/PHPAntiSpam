@@ -4,6 +4,7 @@ require_once 'vendor/autoload.php';
 
 use PHPAntiSpam\Corpus;
 use PHPAntiSpam\AntiSpam;
+use PHPAntiSpam\Tokenizer\WhitespaceTokenizer;
 
 function getMessages() {
 	$dirs = array('spam', 'nospam');
@@ -29,11 +30,10 @@ function getMessages() {
 }
 
 $messages = getMessages();
-$separators = '/[-, ]/';
-
-$corpus = new Corpus($messages, $separators);
-$antispam = new Antispam($corpus);
-$antispam->setMethod(new \PHPAntiSpam\Method\GrahamMethod($corpus));
+$tokenizer = new WhitespaceTokenizer();
+$corpus = new Corpus($messages, $tokenizer);
+$antispam = new AntiSpam($corpus);
+$antispam->setMethod(new \PHPAntiSpam\Method\BurtonMethod($corpus));
 
 $message = 'This promotion is sponsored exclusively by Vindale Research';
 
