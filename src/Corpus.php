@@ -12,7 +12,7 @@ class Corpus
     public $lexemes = [];
     public $messagesCount = ['spam' => 0, 'nospam' => 0];
 
-    public function __construct($messages, TokenizerInterface $tokenizer)
+    public function __construct($messages, TokenizerInterface $tokenizer, $options = [])
     {
         $this->messages = $messages;
         $this->tokenizer = $tokenizer;
@@ -26,15 +26,17 @@ class Corpus
             foreach ($words as $key => $word) {
                 $word = $this->normalizeWord($word);
 
-                if (strlen($word) > 4) {
-                    if (isset($this->lexemes[$word])) {
-                        $this->lexemes[$word][$message['category']]++;
+                if (isset($options['min_word_length']) && strlen($word) < $options['min_word_length']) {
+                    continue;
+                }
+
+                if (isset($this->lexemes[$word])) {
+                    $this->lexemes[$word][$message['category']]++;
+                } else {
+                    if ($message['category'] == 'spam') {
+                        $this->lexemes[$word] = ['spam' => 1, 'nospam' => 0];
                     } else {
-                        if ($message['category'] == 'spam') {
-                            $this->lexemes[$word] = ['spam' => 1, 'nospam' => 0];
-                        } else {
-                            $this->lexemes[$word] = ['spam' => 0, 'nospam' => 1];
-                        }
+                        $this->lexemes[$word] = ['spam' => 0, 'nospam' => 1];
                     }
                 }
             }
