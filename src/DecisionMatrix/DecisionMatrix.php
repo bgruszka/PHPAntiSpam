@@ -30,6 +30,10 @@ abstract class DecisionMatrix
      */
     protected function addWord(&$usefulnessArray, $word, $probability)
     {
+        if(!isset($this->matrix[$word])) {
+            $this->matrix[$word] = [];
+        }
+
         $usefulness = abs($this->neutral - $probability);
 
         $this->matrix[$word]['probability'] = $probability;
