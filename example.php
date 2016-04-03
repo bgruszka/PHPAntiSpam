@@ -4,47 +4,52 @@ require_once 'vendor/autoload.php';
 
 use PHPAntiSpam\Corpus;
 use PHPAntiSpam\AntiSpam;
+use PHPAntiSpam\Tokenizer\WhitespaceTokenizer;
 
-function getMessages() {
-	$dirs = array('spam', 'nospam');
-	
-	$messages = array();
-	
-	foreach($dirs as $dir) {
-	    $files = glob($dir.'/*.txt');
-	
-	    foreach($files as $file) {
-	    	$message = array();
-	    	
-			$content = file_get_contents($file);
-	
-	        $message['content'] = $content;
-	        $message['category'] = $dir;
-	        
-	        $messages[] = $message;
-	    }
-	}
-	
-	return $messages;
-}
+$messages = [
+    ['category' => 'spam', 'content' => 'this is spam'],
+    ['category' => 'nospam', 'content' => 'this is'],
+];
 
-$messages = getMessages();
-$separators = '/[-, ]/';
+$tokenizer = new WhitespaceTokenizer();
+$corpus = new Corpus($messages, $tokenizer);
 
-$corpus = new Corpus($messages, $separators);
-$antispam = new Antispam($corpus);
-$antispam->setMethod(Antispam::GRAHAM_METHOD);
+// Graham method
+$antispam = new AntiSpam($corpus);
+$antispam->setMethod(new \PHPAntiSpam\Method\GrahamMethod($corpus));
 
-$message = 'This promotion is sponsored exclusively by Vindale Research';
+$spamProbability = $antispam->isSpam('This is spam');
 
-$spamProbability = $antispam->isSpam($message);
+echo 'With Graham method:' . PHP_EOL;
+echo sprintf('Spam probability: %s', $spamProbability) . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability < 0.9 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
 
-var_dump($spamProbability);
+// Burton method
+$antispam = new AntiSpam($corpus);
+$antispam->setMethod(new \PHPAntiSpam\Method\BurtonMethod($corpus));
 
-if($spamProbability < 0.9) {
-	echo PHP_EOL . 'no spam' . PHP_EOL;
-} else {
-	echo PHP_EOL . 'spam' . PHP_EOL;
-}
+$spamProbability = $antispam->isSpam('This is spam');
 
-?>
+echo 'With Burton method:' . PHP_EOL;
+echo sprintf('Spam probability: %s', $spamProbability) . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability < 0.9 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
+
+// Robinson Geometric Mean Test Method
+$antispam = new AntiSpam($corpus);
+$antispam->setMethod(new \PHPAntiSpam\Method\RobinsonGeometricMeanTestMethod($corpus));
+
+$spamProbability = $antispam->isSpam('This is spam');
+
+echo 'With Robinson Geometric Mean Test method:' . PHP_EOL;
+echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.5 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
+
+// Fisher-Robinson Inverse Chi Square Method
+$antispam = new AntiSpam($corpus);
+$antispam->setMethod(new \PHPAntiSpam\Method\FisherRobinsonInverseChiSquareMethod($corpus));
+
+$spamProbability = $antispam->isSpam('This is spam');
+
+echo 'With Fisher-Robinson Inverse Chi Square method:' . PHP_EOL;
+echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.5 ? 'NO' : 'YES') . PHP_EOL;

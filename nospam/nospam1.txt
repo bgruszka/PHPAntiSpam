@@ -1,3 +1,0 @@
-Dzień Programisty – święto programistów obchodzone w 256. dniu roku (256 = 2^8, czyli liczba wszystkich możliwych wartości jednego bajta informacji w jego najpopularniejszej, 8-bitowej postaci). Tradycyjnie, programiści starają się uczcić ten dzień w jakiś niekonwencjonalny sposób.
-Dzień Programisty wypada 13 września, a w roku przestępnym 12 września.
-*Wszystkiego najlepszego!* :D
