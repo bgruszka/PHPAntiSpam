@@ -20,7 +20,7 @@ class BurtonMethod extends Method implements MethodInterface
         return $this->bayes($this->decisionMatrix->getMostImportantLexemes(true));
     }
 
-    private function setDecisionMatrix($text)
+    protected function setDecisionMatrix($text)
     {
         $this->decisionMatrix = new DefaultDecisionMatrix(
             $this->getWordsFromText($text),

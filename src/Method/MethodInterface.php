@@ -4,5 +4,5 @@ namespace PHPAntiSpam\Method;
 
 interface MethodInterface
 {
-    function calculate($text);
+    public function calculate($text);
 }

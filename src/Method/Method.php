@@ -12,7 +12,7 @@ use PHPAntiSpam\Corpus;
 use PHPAntiSpam\DecisionMatrix\DecisionMatrixInterface;
 use PHPAntiSpam\Math;
 
-abstract class Method extends Math
+abstract class Method extends Math implements MethodInterface
 {
     protected $bias = true;
 
@@ -48,6 +48,10 @@ abstract class Method extends Math
      */
     protected function calculateWordValue($wordSpamCount, $wordNoSpamCount, $spamMessagesCount, $noSpamMessagesCount)
     {
+        if($spamMessagesCount === 0 || $noSpamMessagesCount === 0) {
+            return DecisionMatrixInterface::NEUTRAL;
+        }
+
         $multiplier = 1;
 
         if ($this->bias) {
@@ -81,4 +85,6 @@ abstract class Method extends Math
 
         return $words;
     }
+
+    abstract protected function setDecisionMatrix($text);
 }
