@@ -105,7 +105,7 @@ abstract class Math
      *
      * @return array
      */
-    public function fisher_robinsons_inverse_chi_square_test(array $lexemes)
+    public function fisherRobinsonsInverseChiSquareTest(array $lexemes)
     {
         $wordsProductProbability = 1;
         $wordsProductProbabilitySubstraction = 1;
