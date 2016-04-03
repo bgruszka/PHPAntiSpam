@@ -42,4 +42,14 @@ $spamProbability = $antispam->isSpam('This is spam');
 
 echo 'With Robinson Geometric Mean Test method:' . PHP_EOL;
 echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
-echo sprintf('Is spam: %s', $spamProbability['combined'] < 0.5 ? 'NO' : 'YES') . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.5 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
+
+// Fisher-Robinson Inverse Chi Square Method
+$antispam = new AntiSpam($corpus);
+$antispam->setMethod(new \PHPAntiSpam\Method\FisherRobinsonInverseChiSquareMethod($corpus));
+
+$spamProbability = $antispam->isSpam('This is spam');
+
+echo 'With Fisher-Robinson Inverse Chi Square method:' . PHP_EOL;
+echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.5 ? 'NO' : 'YES') . PHP_EOL;
