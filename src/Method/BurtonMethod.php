@@ -3,8 +3,6 @@
 namespace PHPAntiSpam\Method;
 
 use PHPAntiSpam\DecisionMatrix\DefaultDecisionMatrix;
-use PHPAntiSpam\Math;
-use PHPAntiSpam\Corpus;
 
 /**
  * Class BurtonMethod
@@ -17,8 +15,9 @@ class BurtonMethod extends Method implements MethodInterface
     public function calculate($text)
     {
         $this->setDecisionMatrix($text);
+        $this->setLexemesProbability();
 
-        return $this->bayes($this->decisionMatrix->getMostImportantLexemes());
+        return $this->bayes($this->decisionMatrix->getMostImportantLexemes(true));
     }
 
     private function setDecisionMatrix($text)
@@ -28,5 +27,6 @@ class BurtonMethod extends Method implements MethodInterface
             $this->corpus,
             self::WINDOW_SIZE
         );
+        $this->decisionMatrix->setDoubleWords(true);
     }
 }

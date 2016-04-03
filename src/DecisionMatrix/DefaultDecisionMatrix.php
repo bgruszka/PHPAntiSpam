@@ -4,6 +4,8 @@ namespace PHPAntiSpam\DecisionMatrix;
 
 class DefaultDecisionMatrix extends DecisionMatrix implements DecisionMatrixInterface
 {
+    private $doubleWords = false;
+
     public function getMostImportantLexemes()
     {
         $usefulnessArray = array();
@@ -23,7 +25,11 @@ class DefaultDecisionMatrix extends DecisionMatrix implements DecisionMatrixInte
                     $probability = $this->corpus->lexemes[$word]['probability'];
                 }
 
-                $this->addWord($usefulnessArray, $word, $probability);
+                if($this->doubleWords) {
+                    $this->addDoubleWord($usefulnessArray, $word, $probability);
+                } else {
+                    $this->addWord($usefulnessArray, $word, $probability);
+                }
 
                 $processedWords[] = $word;
             }
@@ -34,5 +40,10 @@ class DefaultDecisionMatrix extends DecisionMatrix implements DecisionMatrixInte
         $mostImportantLexemes = array_slice($this->matrix, 0, $this->window);
 
         return $mostImportantLexemes;
+    }
+
+    public function setDoubleWords($value)
+    {
+        $this->doubleWords = $value;
     }
 }

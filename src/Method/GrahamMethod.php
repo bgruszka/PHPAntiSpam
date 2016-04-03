@@ -3,8 +3,6 @@
 namespace PHPAntiSpam\Method;
 
 use PHPAntiSpam\DecisionMatrix\DefaultDecisionMatrix;
-use PHPAntiSpam\Math;
-use PHPAntiSpam\Corpus;
 
 /**
  * Class GrahamMethod
