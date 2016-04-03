@@ -12,7 +12,7 @@ abstract class DecisionMatrix implements DecisionMatrixInterface
     /** @var  \PHPAntiSpam\Corpus */
     protected $corpus;
 
-    public function __construct(array $words, Corpus $corpus, $window)
+    public function __construct(array $words, Corpus $corpus, $window = null)
     {
         $this->words = $words;
         $this->corpus = $corpus;
