@@ -2,7 +2,8 @@
 
 namespace PHPAntiSpam\Tokenizer;
 
-class WhitespaceTokenizer extends RegexpTokenizer {
+class WhitespaceTokenizer extends RegexpTokenizer
+{
     public function __construct()
     {
         parent::__construct('/\s/');

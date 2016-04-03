@@ -46,9 +46,13 @@ abstract class Method extends Math implements MethodInterface
      * @param $noSpamMessagesCount
      * @return float
      */
-    protected function calculateGrahamWordValue($wordSpamCount, $wordNoSpamCount, $spamMessagesCount, $noSpamMessagesCount)
-    {
-        if($spamMessagesCount === 0 || $noSpamMessagesCount === 0) {
+    protected function calculateGrahamWordValue(
+        $wordSpamCount,
+        $wordNoSpamCount,
+        $spamMessagesCount,
+        $noSpamMessagesCount
+    ) {
+        if ($spamMessagesCount === 0 || $noSpamMessagesCount === 0) {
             return DecisionMatrixInterface::NEUTRAL;
         }
 
@@ -83,9 +87,12 @@ abstract class Method extends Math implements MethodInterface
 
     protected function getWordsFromText($text)
     {
-        $words = array_map(function ($word) {
-            return strtolower($word);
-        }, $this->corpus->getTokenizer()->tokenize($text));
+        $words = array_map(
+            function ($word) {
+                return strtolower($word);
+            },
+            $this->corpus->getTokenizer()->tokenize($text)
+        );
 
         return $words;
     }

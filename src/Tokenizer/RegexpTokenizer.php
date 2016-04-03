@@ -10,6 +10,7 @@ class RegexpTokenizer implements TokenizerInterface
     {
         $this->regexp = $regexp;
     }
+
     public function tokenize($text)
     {
         return preg_split($this->regexp, $text, null, PREG_SPLIT_NO_EMPTY);

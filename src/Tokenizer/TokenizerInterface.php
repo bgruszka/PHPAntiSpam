@@ -2,6 +2,7 @@
 
 namespace PHPAntiSpam\Tokenizer;
 
-interface TokenizerInterface {
+interface TokenizerInterface
+{
     public function tokenize($text);
 }
