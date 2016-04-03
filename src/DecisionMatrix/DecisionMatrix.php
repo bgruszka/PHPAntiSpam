@@ -4,15 +4,13 @@ namespace PHPAntiSpam\DecisionMatrix;
 
 use PHPAntiSpam\Corpus;
 
-abstract class DecisionMatrix
+abstract class DecisionMatrix implements DecisionMatrixInterface
 {
     protected $matrix = [];
     protected $words = [];
 
     /** @var  \PHPAntiSpam\Corpus */
     protected $corpus;
-
-    protected $neutral = 0.5;
 
     public function __construct(array $words, Corpus $corpus, $window)
     {
@@ -34,7 +32,7 @@ abstract class DecisionMatrix
             $this->matrix[$word] = [];
         }
 
-        $usefulness = abs($this->neutral - $probability);
+        $usefulness = abs(self::NEUTRAL - $probability);
 
         $this->matrix[$word]['probability'] = $probability;
         $this->matrix[$word]['usefulness'] = $usefulness;

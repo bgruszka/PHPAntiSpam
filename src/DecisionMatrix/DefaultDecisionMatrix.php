@@ -2,7 +2,7 @@
 
 namespace PHPAntiSpam\DecisionMatrix;
 
-class DefaultDecisionMatrix extends DecisionMatrix implements DecisionMatrixInterface
+class DefaultDecisionMatrix extends DecisionMatrix
 {
     private $doubleWords = false;
 

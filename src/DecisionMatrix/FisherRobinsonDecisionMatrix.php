@@ -9,7 +9,7 @@ namespace PHPAntiSpam\DecisionMatrix;
  * specific range of probability (usually 0.0 through 0.1 and 0.9
  * through 1.0) and doesn't require sorting.
  */
-class FisherRobinsonDecisionMatrix extends DecisionMatrix implements DecisionMatrixInterface
+class FisherRobinsonDecisionMatrix extends DecisionMatrix
 {
     public function getMostImportantLexemes()
     {
