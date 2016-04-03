@@ -9,6 +9,7 @@
 namespace PHPAntiSpam\Method;
 
 use PHPAntiSpam\Corpus;
+use PHPAntiSpam\DecisionMatrix\DecisionMatrixInterface;
 use PHPAntiSpam\Math;
 
 abstract class Method extends Math
@@ -16,6 +17,8 @@ abstract class Method extends Math
     protected $bias = true;
 
     protected $text;
+
+    /** @var DecisionMatrixInterface */
     protected $decisionMatrix;
 
     /** @var  Corpus */
@@ -56,7 +59,7 @@ abstract class Method extends Math
         return $value;
     }
 
-    protected function setLexemes()
+    protected function setLexemesProbability()
     {
         foreach ($this->corpus->lexemes as $word => $value) {
             $value = $this->calculateWordValue(

@@ -17,12 +17,9 @@ class GrahamMethod extends Method implements MethodInterface
     public function calculate($text)
     {
         $this->setDecisionMatrix($text);
+        $this->setLexemesProbability();
 
-        $this->setLexemes();
-
-        $result = $this->bayes($this->decisionMatrix->getMostImportantLexemes());
-
-        return $result;
+        return $this->bayes($this->decisionMatrix->getMostImportantLexemes());
     }
 
     private function setDecisionMatrix($text)
