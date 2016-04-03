@@ -33,7 +33,7 @@ abstract class Math
      *
      * @return float
      */
-    public function robinson($wordOccurrences, $wordGrahamValue)
+    public function calculateRobinsonWordValue($wordOccurrences, $wordGrahamValue)
     {
         $s = 1;
         $x = 0.5;

@@ -63,17 +63,21 @@ abstract class Method extends Math implements MethodInterface
         return $value;
     }
 
-    protected function setLexemesProbability()
+    protected function setLexemesProbability($withRobinson = false)
     {
         foreach ($this->corpus->lexemes as $word => $value) {
-            $value = $this->calculateWordValue(
+            $probability = $this->calculateGrahamWordValue(
                 $value['spam'],
                 $value['nospam'],
                 $this->corpus->messagesCount['spam'],
                 $this->corpus->messagesCount['nospam']
             );
 
-            $this->corpus->lexemes[$word]['probability'] = $value;
+            if ($withRobinson) {
+                $probability = $this->calculateRobinsonWordValue($value['spam'] + $value['nospam'], $probability);
+            }
+
+            $this->corpus->lexemes[$word]['probability'] = $probability;
         }
     }
 

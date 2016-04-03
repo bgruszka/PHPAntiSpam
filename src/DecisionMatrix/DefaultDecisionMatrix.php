@@ -20,7 +20,7 @@ class DefaultDecisionMatrix extends DecisionMatrix
                 // first occurrence of lexeme (unit lexeme)
                 if (!isset($this->corpus->lexemes[$word])) {
                     // set default / neutral lexeme probability
-                    $probability = $this->neutral;
+                    $probability = self::NEUTRAL;
                 } else {
                     $probability = $this->corpus->lexemes[$word]['probability'];
                 }
