@@ -1,5 +1,5 @@
 {
-  "name": "bgruszka/PHPAntiSpam",
+  "name": "bgruszka/phpantispam",
   "description": "Bayesian spam recognition library",
   "version": "0.1.0",
   "type": "library",
