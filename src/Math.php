@@ -78,7 +78,7 @@ abstract class Math
      *
      * @return float
      */
-    private function __chi2Q($x, $v)
+    private function chi2Q($x, $v)
     {
         $m = $x / 2;
         $s = exp(-$m);
@@ -115,8 +115,8 @@ abstract class Math
             $wordsProductProbabilitySubstraction *= 1 - $lexeme['probability'];
         }
 
-        $hamminess = $this->__chi2Q(-2 * log($wordsProductProbability), 2 * count($lexemes));
-        $spamminess = $this->__chi2Q(-2 * log($wordsProductProbabilitySubstraction), 2 * count($lexemes));
+        $hamminess = $this->chi2Q(-2 * log($wordsProductProbability), 2 * count($lexemes));
+        $spamminess = $this->chi2Q(-2 * log($wordsProductProbabilitySubstraction), 2 * count($lexemes));
 
         $combined = (1 + $hamminess - $spamminess) / 2;
 
