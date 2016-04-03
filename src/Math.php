@@ -53,7 +53,7 @@ abstract class Math
      *
      * @return array
      */
-    public function robinson_geometric_mean_test(array $lexemes)
+    public function robinsonGeometricMeanTest(array $lexemes)
     {
         $spamminess = 1;
         $hamminess = 1;

@@ -46,7 +46,7 @@ abstract class Method extends Math implements MethodInterface
      * @param $noSpamMessagesCount
      * @return float
      */
-    protected function calculateWordValue($wordSpamCount, $wordNoSpamCount, $spamMessagesCount, $noSpamMessagesCount)
+    protected function calculateGrahamWordValue($wordSpamCount, $wordNoSpamCount, $spamMessagesCount, $noSpamMessagesCount)
     {
         if($spamMessagesCount === 0 || $noSpamMessagesCount === 0) {
             return DecisionMatrixInterface::NEUTRAL;
