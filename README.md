@@ -1,5 +1,8 @@
 # PHPAntiSpam
 
+[![Build Status](https://travis-ci.org/bgruszka/PHPAntiSpam.svg?branch=master)](https://travis-ci.org/bgruszka/PHPAntiSpam)
+[![Code Climate](https://codeclimate.com/github/bgruszka/PHPAntiSpam/badges/gpa.svg)](https://codeclimate.com/github/bgruszka/PHPAntiSpam)
+
 ## PHPAntiSpam is a library that recognize if documents / messages / texts are spam or not. The library use statistical analysis.
 
 ## Explanation in 4 steps:
