@@ -2,17 +2,17 @@
 
 namespace PHPAntiSpam\DecisionMatrix;
 
-use PHPAntiSpam\Corpus;
+use PHPAntiSpam\Corpus\CorpusInterface;
 
 abstract class DecisionMatrix implements DecisionMatrixInterface
 {
     protected $matrix = [];
     protected $words = [];
 
-    /** @var  \PHPAntiSpam\Corpus */
+    /** @var  \PHPAntiSpam\Corpus\CorpusInterface */
     protected $corpus;
 
-    public function __construct(array $words, Corpus $corpus, $window = null)
+    public function __construct(array $words, CorpusInterface $corpus, $window = null)
     {
         $this->words = $words;
         $this->corpus = $corpus;
@@ -52,5 +52,10 @@ abstract class DecisionMatrix implements DecisionMatrixInterface
             $word = $word . $i;
             $this->addWord($usefulnessArray, $word, $probability);
         }
+    }
+
+    public function getWords()
+    {
+        return $this->words;
     }
 }

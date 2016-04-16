@@ -16,13 +16,15 @@ class FisherRobinsonDecisionMatrix extends DecisionMatrix
         $decisionMatrix = array();
         $processedWords = array();
 
+        $lexemes = $this->corpus->getLexemes($this->words);
+
         foreach ($this->words as $word) {
             $word = trim($word);
             if (strlen($word) > 0 && !in_array($word, $processedWords)) {
-                if (isset($this->corpus->lexemes[$word])) {
-                    $isInRanges = $this->corpus->lexemes[$word]['probability'] <= 0.1 || $this->corpus->lexemes[$word]['probability'] >= 0.9;
+                if (isset($lexemes[$word])) {
+                    $isInRanges = $lexemes[$word]['probability'] <= 0.1 || $lexemes[$word]['probability'] >= 0.9;
                     if ($isInRanges) {
-                        $decisionMatrix[$word]['probability'] = $this->corpus->lexemes[$word]['probability'];
+                        $decisionMatrix[$word]['probability'] = $lexemes[$word]['probability'];
                         $processedWords[] = $word;
                     }
                 }

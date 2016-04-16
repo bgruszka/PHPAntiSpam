@@ -15,14 +15,17 @@ class DefaultDecisionMatrix extends DecisionMatrix
             $this->words[$key] = trim($word);
         }
 
+        $lexemes = $this->corpus->getLexemes($this->words);
+
         foreach ($this->words as $word) {
             if (strlen($word) > 0 && !in_array($word, $processedWords)) {
+
                 // first occurrence of lexeme (unit lexeme)
-                if (!isset($this->corpus->lexemes[$word])) {
+                if (!isset($lexemes[$word])) {
                     // set default / neutral lexeme probability
                     $probability = self::NEUTRAL;
                 } else {
-                    $probability = $this->corpus->lexemes[$word]['probability'];
+                    $probability = $lexemes[$word]['probability'];
                 }
 
                 if($this->doubleWords) {
