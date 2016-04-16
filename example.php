@@ -2,7 +2,7 @@
 
 require_once 'vendor/autoload.php';
 
-use PHPAntiSpam\Corpus;
+use PHPAntiSpam\Corpus\ArrayCorpus;
 use PHPAntiSpam\AntiSpam;
 use PHPAntiSpam\Tokenizer\WhitespaceTokenizer;
 
@@ -12,7 +12,7 @@ $messages = [
 ];
 
 $tokenizer = new WhitespaceTokenizer();
-$corpus = new Corpus($messages, $tokenizer);
+$corpus = new ArrayCorpus($messages, $tokenizer);
 
 // Graham method
 $antispam = new AntiSpam($corpus);
@@ -42,7 +42,7 @@ $spamProbability = $antispam->isSpam('This is spam');
 
 echo 'With Robinson Geometric Mean Test method:' . PHP_EOL;
 echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
-echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.5 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.55 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
 
 // Fisher-Robinson Inverse Chi Square Method
 $antispam = new AntiSpam($corpus);
@@ -52,4 +52,4 @@ $spamProbability = $antispam->isSpam('This is spam');
 
 echo 'With Fisher-Robinson Inverse Chi Square method:' . PHP_EOL;
 echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
-echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.5 ? 'NO' : 'YES') . PHP_EOL;
+echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.55 ? 'NO' : 'YES') . PHP_EOL;
