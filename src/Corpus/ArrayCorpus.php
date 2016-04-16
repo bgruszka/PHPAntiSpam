@@ -37,15 +37,11 @@ class ArrayCorpus implements CorpusInterface
 
     public function updateLexem($word, $category)
     {
-        if (isset($this->lexemes[$word])) {
-            $this->lexemes[$word][$category]++;
-        } else {
-            if ($category == 'spam') {
-                $this->lexemes[$word] = ['spam' => 1, 'nospam' => 0];
-            } else {
-                $this->lexemes[$word] = ['spam' => 0, 'nospam' => 1];
-            }
+        if (!isset($this->lexemes[$word])) {
+            $this->lexemes[$word] = ['spam' => 0, 'nospam' => 0];
         }
+
+        $this->lexemes[$word][$category]++;
     }
 
     public function getLexemes(array $words)
