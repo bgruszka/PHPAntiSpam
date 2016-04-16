@@ -1,15 +1,15 @@
 <?php
 
-namespace PHPAntiSpam;
+namespace PHPAntiSpam\Corpus;
 
 use PHPAntiSpam\Tokenizer\TokenizerInterface;
 
-class Corpus
+class ArrayCorpus implements CorpusInterface
 {
 
     protected $messages = [];
     protected $tokenizer;
-    public $lexemes = [];
+    protected $lexemes = [];
     public $messagesCount = ['spam' => 0, 'nospam' => 0];
 
     public function __construct($messages, TokenizerInterface $tokenizer, $options = [])
@@ -30,17 +30,42 @@ class Corpus
                     continue;
                 }
 
-                if (isset($this->lexemes[$word])) {
-                    $this->lexemes[$word][$message['category']]++;
-                } else {
-                    if ($message['category'] == 'spam') {
-                        $this->lexemes[$word] = ['spam' => 1, 'nospam' => 0];
-                    } else {
-                        $this->lexemes[$word] = ['spam' => 0, 'nospam' => 1];
-                    }
-                }
+                $this->updateLexem($word, $message['category']);
             }
         }
+    }
+
+    public function updateLexem($word, $category)
+    {
+        if (isset($this->lexemes[$word])) {
+            $this->lexemes[$word][$category]++;
+        } else {
+            if ($category == 'spam') {
+                $this->lexemes[$word] = ['spam' => 1, 'nospam' => 0];
+            } else {
+                $this->lexemes[$word] = ['spam' => 0, 'nospam' => 1];
+            }
+        }
+    }
+
+    public function getLexemes(array $words)
+    {
+        $lexemes = [];
+
+        foreach($words as $word) {
+            if (!isset($this->lexemes[$word])) {
+                continue;
+            }
+
+            $lexemes[$word] = $this->lexemes[$word];
+        }
+
+        return $lexemes;
+    }
+
+    public function setLexemes(array $lexemes)
+    {
+        $this->lexemes = $lexemes;
     }
 
     public function getTokenizer()
