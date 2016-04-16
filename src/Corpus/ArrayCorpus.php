@@ -23,7 +23,7 @@ class ArrayCorpus implements CorpusInterface
 
             $words = $tokenizer->tokenize($message['content']);
 
-            foreach ($words as $key => $word) {
+            foreach ($words as $word) {
                 $word = $this->normalizeWord($word);
 
                 if (isset($options['min_word_length']) && strlen($word) < $options['min_word_length']) {
