@@ -8,7 +8,7 @@ use PHPAntiSpam\DecisionMatrix\DefaultDecisionMatrix;
  * Class BurtonMethod
  * @package PHPAntiSpam\Method
  */
-class BurtonMethod extends Method implements MethodInterface
+class BurtonMethod extends Method
 {
     const WINDOW_SIZE = 27;
 

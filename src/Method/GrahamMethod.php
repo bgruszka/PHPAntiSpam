@@ -8,7 +8,7 @@ use PHPAntiSpam\DecisionMatrix\DefaultDecisionMatrix;
  * Class GrahamMethod
  * @package PHPAntiSpam\Method
  */
-class GrahamMethod extends Method implements MethodInterface
+class GrahamMethod extends Method
 {
     const WINDOW_SIZE = 15;
 
