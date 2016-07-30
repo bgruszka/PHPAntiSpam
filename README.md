@@ -17,6 +17,9 @@
 * Robinson Geometric Mean Test method
 * Fisher-Robinson's Inverse Chi-Square Test method
 
+## Installation
+`composer require bgruszka/phpantispam "^0.2"`
+
 ## Examples
 
 ```php
