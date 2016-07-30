@@ -36,7 +36,8 @@ $messages = [
     ['category' => 'nospam', 'content' => 'this is'],
 ];
 
-// As tokenizer we can use the simplest one - WhitespaceTokenizer (but of course you can also use RegexpTokenizer or create new one)
+// As tokenizer we can use the simplest one - WhitespaceTokenizer (but of course you can also use RegexpTokenizer
+// or create new one)
 $tokenizer = new WhitespaceTokenizer();
 
 // Let's define our corpus - collection of text documents
@@ -77,7 +78,12 @@ $classifier->setMethod(new \PHPAntiSpam\Method\RobinsonGeometricMeanTestMethod($
 $spamProbability = $classifier->isSpam('This is spam');
 
 echo 'With Robinson Geometric Mean Test method:' . PHP_EOL;
-echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
+echo sprintf(
+    'Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', 
+    $spamProbability['spamminess'], 
+    $spamProbability['hamminess'], 
+    $spamProbability['combined']
+) . PHP_EOL;
 echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.55 ? 'NO' : 'YES') . PHP_EOL . PHP_EOL;
 
 // ------------------------------------------------------------------------------------
@@ -89,6 +95,11 @@ $classifier->setMethod(new \PHPAntiSpam\Method\FisherRobinsonInverseChiSquareMet
 $spamProbability = $classifier->isSpam('This is spam');
 
 echo 'With Fisher-Robinson Inverse Chi Square method:' . PHP_EOL;
-echo sprintf('Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', $spamProbability['spamminess'], $spamProbability['hamminess'], $spamProbability['combined']) . PHP_EOL;
+echo sprintf(
+    'Spam probability: [spamminess: %s; hamminess: %s; combined: %s]', 
+    $spamProbability['spamminess'], 
+    $spamProbability['hamminess'], 
+    $spamProbability['combined']
+) . PHP_EOL;
 echo sprintf('Is spam: %s', $spamProbability['combined'] <= 0.55 ? 'NO' : 'YES') . PHP_EOL;
 ```
