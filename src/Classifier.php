@@ -4,7 +4,7 @@ namespace PHPAntiSpam;
 
 use PHPAntiSpam\Method\MethodInterface;
 
-class AntiSpam
+class Classifier
 {
     /** @var  MethodInterface */
     protected $method;

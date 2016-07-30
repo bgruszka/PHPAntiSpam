@@ -1,14 +1,8 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: snipe
- * Date: 09.08.15
- * Time: 11:31
- */
 
 namespace PHPAntiSpam\Method;
 
-use PHPAntiSpam\Corpus;
+use PHPAntiSpam\Corpus\CorpusInterface;
 use PHPAntiSpam\DecisionMatrix\DecisionMatrixInterface;
 use PHPAntiSpam\Math;
 
@@ -21,10 +15,10 @@ abstract class Method extends Math implements MethodInterface
     /** @var DecisionMatrixInterface */
     protected $decisionMatrix;
 
-    /** @var  Corpus */
+    /** @var  CorpusInterface */
     protected $corpus;
 
-    public function __construct(Corpus $corpus)
+    public function __construct(CorpusInterface $corpus)
     {
         $this->corpus = $corpus;
     }
@@ -69,7 +63,9 @@ abstract class Method extends Math implements MethodInterface
 
     protected function setLexemesProbability($withRobinson = false)
     {
-        foreach ($this->corpus->lexemes as $word => $value) {
+        $lexemes = $this->corpus->getLexemes($this->decisionMatrix->getWords());
+
+        foreach ($lexemes as $word => $value) {
             $probability = $this->calculateGrahamWordValue(
                 $value['spam'],
                 $value['nospam'],
@@ -81,7 +77,9 @@ abstract class Method extends Math implements MethodInterface
                 $probability = $this->calculateRobinsonWordValue($value['spam'] + $value['nospam'], $probability);
             }
 
-            $this->corpus->lexemes[$word]['probability'] = $probability;
+            $lexemes[$word]['probability'] = $probability;
+
+            $this->corpus->setLexemes($lexemes);
         }
     }
 
