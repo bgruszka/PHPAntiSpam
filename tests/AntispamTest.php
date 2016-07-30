@@ -20,10 +20,10 @@ class AntiSpamTest extends \PHPUnit_Framework_TestCase
                ->method('calculate')
                ->will($this->returnValue(0.90));
 
-        $antiSpam = new AntiSpam($corpus);
-        $antiSpam->setMethod($method);
+        $classifier = new Classifier($corpus);
+        $classifier->setMethod($method);
 
-        $this->assertEquals(0.90, $antiSpam->isSpam('short text'));
+        $this->assertEquals(0.90, $classifier->isSpam('short text'));
 	}
 }
 
