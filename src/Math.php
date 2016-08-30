@@ -16,8 +16,10 @@ abstract class Math
         $numerator = 1;
         $denominator = 1;
         foreach ($lexemes as $lexeme) {
-            $numerator *= $lexeme['probability'];
-            $denominator *= 1 - $lexeme['probability'];
+            if ($lexeme['probability'] > 0) {
+                $numerator *= $lexeme['probability'];
+                $denominator *= 1 - $lexeme['probability'];
+            }    
         }
 
         $result = $numerator / ($numerator + $denominator);
