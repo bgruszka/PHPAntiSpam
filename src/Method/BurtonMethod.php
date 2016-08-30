@@ -17,7 +17,7 @@ class BurtonMethod extends Method
         $this->setDecisionMatrix($text);
         $this->setLexemesProbability();
 
-        return $this->bayes($this->decisionMatrix->getMostImportantLexemes(true));
+        return $this->bayes($this->decisionMatrix->getMostImportantLexemes());
     }
 
     protected function setDecisionMatrix($text)

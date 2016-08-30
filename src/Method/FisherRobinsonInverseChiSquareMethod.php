@@ -9,7 +9,7 @@ class FisherRobinsonInverseChiSquareMethod extends Method
     public function calculate($text)
     {
         $this->setDecisionMatrix($text);
-        $this->setLexemesProbability(true);
+        $this->setLexemesProbability();
 
         return $this->fisherRobinsonsInverseChiSquareTest($this->decisionMatrix->getMostImportantLexemes());
     }

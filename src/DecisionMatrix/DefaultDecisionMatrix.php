@@ -18,7 +18,7 @@ class DefaultDecisionMatrix extends DecisionMatrix
         $lexemes = $this->corpus->getLexemes($this->words);
 
         foreach ($this->words as $word) {
-            if (strlen($word) > 0 && !in_array($word, $processedWords)) {
+            if (mb_strlen($word, 'utf-8') > 0 && !in_array($word, $processedWords)) {
 
                 // first occurrence of lexeme (unit lexeme)
                 if (!isset($lexemes[$word])) {

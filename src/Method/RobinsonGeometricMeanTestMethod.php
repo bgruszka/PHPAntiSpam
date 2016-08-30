@@ -11,7 +11,7 @@ class RobinsonGeometricMeanTestMethod extends Method
     public function calculate($text)
     {
         $this->setDecisionMatrix($text);
-        $this->setLexemesProbability(true);
+        $this->setLexemesProbability();
 
         return $this->robinsonGeometricMeanTest($this->decisionMatrix->getMostImportantLexemes());
     }
