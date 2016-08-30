@@ -61,7 +61,7 @@ abstract class Method extends Math implements MethodInterface
         return $value;
     }
 
-    protected function setLexemesProbability($withRobinson = false)
+    protected function setLexemesProbability()
     {
         $lexemes = $this->corpus->getLexemes($this->decisionMatrix->getWords());
 
@@ -73,9 +73,7 @@ abstract class Method extends Math implements MethodInterface
                 $this->corpus->messagesCount['nospam']
             );
 
-            if ($withRobinson) {
-                $probability = $this->calculateRobinsonWordValue($value['spam'] + $value['nospam'], $probability);
-            }
+            $probability = $this->calculateRobinsonWordValue($value['spam'] + $value['nospam'], $probability);
 
             $lexemes[$word]['probability'] = $probability;
 
