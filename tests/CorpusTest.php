@@ -22,7 +22,7 @@ class CorpusTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(['simple', 'text']));
 
         $corpus = new ArrayCorpus($messages, $tokenizer, ['min_word_length' => 10]);
-        $lexemes = $corpus->getLexemes(['simple', 'text']);
+        $lexemes = $corpus->getLexemesForGivenWords(['simple', 'text']);
 
         $this->assertCount(0, $lexemes);
         $this->assertEquals([], $lexemes);
@@ -47,7 +47,7 @@ class CorpusTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(['simple', 'text']));
 
         $corpus = new ArrayCorpus($messages, $tokenizer);
-        $lexemes = $corpus->getLexemes(['simple', 'text']);
+        $lexemes = $corpus->getLexemesForGivenWords(['simple', 'text']);
 
         $this->assertCount(2, $lexemes);
         $this->assertEquals([
@@ -75,7 +75,7 @@ class CorpusTest extends PHPUnit_Framework_TestCase
             ->will($this->returnValue(['simple', 'text']));
 
         $corpus = new ArrayCorpus($messages, $tokenizer);
-        $lexemes = $corpus->getLexemes(['simple', 'text']);
+        $lexemes = $corpus->getLexemesForGivenWords(['simple', 'text']);
 
         $this->assertCount(2, $lexemes);
         $this->assertEquals([

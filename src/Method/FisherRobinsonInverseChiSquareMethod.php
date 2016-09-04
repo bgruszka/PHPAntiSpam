@@ -17,7 +17,7 @@ class FisherRobinsonInverseChiSquareMethod extends Method
     protected function setDecisionMatrix($text)
     {
         $this->decisionMatrix = new FisherRobinsonDecisionMatrix(
-            $this->getWordsFromText($text),
+            $this->corpus->getWordsFromText($text),
             $this->corpus
         );
     }

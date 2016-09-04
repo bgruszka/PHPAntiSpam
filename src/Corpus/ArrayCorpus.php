@@ -6,33 +6,42 @@ use PHPAntiSpam\Tokenizer\TokenizerInterface;
 
 class ArrayCorpus implements CorpusInterface
 {
-
-    protected $messages = [];
-    protected $tokenizer;
     protected $lexemes = [];
     public $messagesCount = ['spam' => 0, 'nospam' => 0];
 
-    public function __construct($messages, TokenizerInterface $tokenizer, $options = [])
+    public function __construct(array $lexemes = null, array $messagesCount = null)
     {
-        $this->messages = $messages;
-        $this->tokenizer = $tokenizer;
+        if (!is_null($lexemes)) {
+            $this->lexemes = $lexemes;
+        }
+
+        if (!is_null($messagesCount)) {
+            $this->messagesCount = $messagesCount;
+        }
+    }
+
+    public static function create($messages, TokenizerInterface $tokenizer, $options = [])
+    {
+        $corpus = new self();
 
         // next
-        foreach ($this->messages as $message) {
-            $this->messagesCount[$message['category']]++;
+        foreach ($messages as $message) {
+            $corpus->messagesCount[$message['category']]++;
 
             $words = $tokenizer->tokenize($message['content']);
 
             foreach ($words as $word) {
-                $word = $this->normalizeWord($word);
+                $word = $corpus->normalizeWord($word);
 
                 if (isset($options['min_word_length']) && strlen($word) < $options['min_word_length']) {
                     continue;
                 }
 
-                $this->updateLexem($word, $message['category']);
+                $corpus->updateLexem($word, $message['category']);
             }
         }
+
+        return $corpus;
     }
 
     public function updateLexem($word, $category)
@@ -44,7 +53,17 @@ class ArrayCorpus implements CorpusInterface
         $this->lexemes[$word][$category]++;
     }
 
-    public function getLexemes(array $words)
+    public function getMessagesCount()
+    {
+        return $this->messagesCount;
+    }
+
+    public function getLexemes()
+    {
+        return $this->lexemes;
+    }
+
+    public function getLexemesForGivenWords(array $words)
     {
         $lexemes = [];
 
@@ -80,6 +99,29 @@ class ArrayCorpus implements CorpusInterface
         return strtolower(trim($word));
     }
 
+    public function getDataForSerialization()
+    {
+
+    }
+
+    public function __sleep()
+    {
+        return ['lexemes', 'messagesCount'];
+    }
+
+    public function writeToFile($filename)
+    {
+        $serialized = serialize($this);
+
+        file_put_contents($filename, $serialized, LOCK_EX);
+    }
+
+    public static function readFromFile($filename)
+    {
+        $serialized = file_get_contents($filename);
+
+        return unserialize($serialized);
+    }
 }
 
 ?>

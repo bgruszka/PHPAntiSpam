@@ -19,7 +19,7 @@ class RobinsonGeometricMeanTestMethod extends Method
     protected function setDecisionMatrix($text)
     {
         $this->decisionMatrix = new DefaultDecisionMatrix(
-            $this->getWordsFromText($text),
+            $this->corpus->getWordsFromText($text),
             $this->corpus,
             self::WINDOW_SIZE
         );

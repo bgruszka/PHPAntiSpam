@@ -63,7 +63,7 @@ abstract class Method extends Math implements MethodInterface
 
     protected function setLexemesProbability()
     {
-        $lexemes = $this->corpus->getLexemes($this->decisionMatrix->getWords());
+        $lexemes = $this->corpus->getLexemesForGivenWords($this->decisionMatrix->getWords());
 
         foreach ($lexemes as $word => $value) {
             $probability = $this->calculateGrahamWordValue(
@@ -79,18 +79,6 @@ abstract class Method extends Math implements MethodInterface
 
             $this->corpus->setLexemes($lexemes);
         }
-    }
-
-    protected function getWordsFromText($text)
-    {
-        $words = array_map(
-            function ($word) {
-                return strtolower($word);
-            },
-            $this->corpus->getTokenizer()->tokenize($text)
-        );
-
-        return $words;
     }
 
     abstract protected function setDecisionMatrix($text);
