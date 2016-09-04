@@ -15,7 +15,7 @@ class DefaultDecisionMatrix extends DecisionMatrix
             $this->words[$key] = trim($word);
         }
 
-        $lexemes = $this->corpus->getLexemes($this->words);
+        $lexemes = $this->corpus->getLexemesForGivenWords($this->words);
 
         foreach ($this->words as $word) {
             if (mb_strlen($word, 'utf-8') > 0 && !in_array($word, $processedWords)) {

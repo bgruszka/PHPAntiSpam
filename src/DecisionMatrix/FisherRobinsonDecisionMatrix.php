@@ -16,7 +16,7 @@ class FisherRobinsonDecisionMatrix extends DecisionMatrix
         $decisionMatrix = array();
         $processedWords = array();
 
-        $lexemes = $this->corpus->getLexemes($this->words);
+        $lexemes = $this->corpus->getLexemesForGivenWords($this->words);
 
         foreach ($this->words as $word) {
             $word = trim($word);
