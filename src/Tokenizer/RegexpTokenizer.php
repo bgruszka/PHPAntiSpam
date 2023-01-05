@@ -13,6 +13,6 @@ class RegexpTokenizer implements TokenizerInterface
 
     public function tokenize($text)
     {
-        return preg_split($this->regexp, $text, null, PREG_SPLIT_NO_EMPTY);
+        return preg_split($this->regexp, $text, -1, PREG_SPLIT_NO_EMPTY);
     }
 }
